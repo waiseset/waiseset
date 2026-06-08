@@ -297,12 +297,11 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="avatar">
-                    <!-- 头像：加载失败时显示蓝色圆形W的SVG -->
                     <img 
                         class="avatar-img" 
                         src="https://r2.image-upload.app/ptImg/semnKjzz.jpg" 
                         alt="头像"
-                        onerror="images/头像.svg"
+                        onerror="this.onerror=null;this.src='images/头像.svg';"
                     >
                     <span class="avatar-text">W</span>
                 </div>
@@ -329,19 +328,18 @@
             <div id="defaultView">
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" class="search-input" placeholder="在 AI 分类中搜索...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="在所有链接中搜索...">
                 </div>
                 <p class="search-info" id="searchInfo"></p>
-                <div class="content-title" id="contentTitle">🤖 AI</div>
+                <div class="content-title" id="contentTitle">🗂️ 全部链接</div>
                 <div class="link-grid" id="linkGrid"></div>
             </div>
 
             <div id="sponsorView" class="sponsor-view" style="display: none;">
-                <!-- 赞助图片：加载失败时显示占位SVG -->
                 <img 
                     src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
                     alt="赞助二维码"
-                    onerror="images/赞助.svg"
+                    onerror="this.onerror=null;this.src='images/赞助.svg';"
                 >
                 <button class="close-btn" id="closeSponsorBtn">← 返回导航</button>
             </div>
@@ -461,7 +459,8 @@
             ]
         }];
 
-        let currentCategoryId = 'dev';
+        // 默认显示全部链接
+        let currentCategoryId = 'all';
         let isSearching = false;
 
         // 赞助视图切换
