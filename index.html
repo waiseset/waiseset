@@ -70,6 +70,7 @@
             width: 100%;
         }
 
+        /* 侧边栏 - 整体滚动 */
         .sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-width);
@@ -77,7 +78,7 @@
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            overflow-y: auto;          /* 允许侧边栏整体滚动 */
             overflow-x: hidden;
             z-index: 10;
             padding: 24px 20px 20px;
@@ -148,10 +149,10 @@
             padding: 0 4px; font-weight: 600;
         }
 
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; flex: 1; overflow-y: auto; overflow-x: hidden; }
-        .nav-list::-webkit-scrollbar { width: 4px; }
-        .nav-list::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        .nav-list { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
+        /* 导航列表不再单独滚动，而是跟随侧边栏整体滚动 */
+        .nav-list {
+            list-style: none; display: flex; flex-direction: column; gap: 2px;
+        }
 
         .nav-item {
             display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm);
@@ -177,6 +178,7 @@
         .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}
         .icon-all{background:#e8e8ed}
 
+        /* 右侧主内容 */
         .main-content {
             flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
             padding: 28px 32px 40px; background: var(--bg); scroll-behavior: smooth;
@@ -264,13 +266,45 @@
 
         .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
 
-        .sidebar-toggle { display: none; position: fixed; top: 12px; left: 12px; z-index: 100; width: 40px; height: 40px; border-radius: 20px; background: var(--card-bg); border: 1px solid var(--border); font-size: 20px; cursor: pointer; box-shadow: var(--shadow); color: var(--text); align-items: center; justify-content: center; }
+        /* 移动端菜单按钮 */
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            color: var(--text);
+            align-items: center;
+            justify-content: center;
+        }
         .sidebar-overlay { display: none; position: fixed; top:0;left:0;right:0;bottom:0; background: rgba(0,0,0,0.4); z-index: 9; }
         .sidebar-overlay.active { display: block; }
 
+        /* 移动端适配 */
         @media (max-width: 768px) {
             .app-layout { flex-direction: column; }
-            .sidebar { position: fixed; top:0; left:-100%; width:280px; min-width:280px; height:100vh; z-index:50; transition: left 0.3s ease; border-right:1px solid var(--border); box-shadow:4px 0 20px rgba(0,0,0,0.15); padding-top:50px; }
+            .sidebar {
+                position: fixed;
+                top:0;
+                left:-100%;
+                width:280px;
+                min-width:280px;
+                height:100vh;
+                z-index:50;
+                transition: left 0.3s ease;
+                border-right:1px solid var(--border);
+                box-shadow:4px 0 20px rgba(0,0,0,0.15);
+                padding-top:50px;
+                /* 保持 overflow-y: auto 允许整体滚动 */
+            }
             .sidebar.open { left:0; }
             .sidebar-toggle { display:flex; }
             .main-content { padding:18px 14px 30px; padding-top:56px; }
@@ -294,6 +328,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="app-layout">
+        <!-- 侧边栏（整体滚动） -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="avatar">
@@ -324,6 +359,7 @@
             <ul class="nav-list" id="navList"></ul>
         </aside>
 
+        <!-- 主内容区 -->
         <main class="main-content" id="mainContent">
             <div id="defaultView">
                 <div class="search-wrapper">
@@ -349,7 +385,7 @@
     </div>
 
     <script>
-        // 分类数据
+        // 分类数据（保持不变）
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -459,7 +495,6 @@
             ]
         }];
 
-        // 默认显示全部链接
         let currentCategoryId = 'all';
         let isSearching = false;
 
@@ -661,6 +696,7 @@
             });
         }
 
+        // 移动端侧边栏与菜单按钮交互
         function setupMobile() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
@@ -669,7 +705,9 @@
             toggleBtn.addEventListener('click', () => {
                 sidebar.classList.add('open');
                 overlay.classList.add('active');
+                toggleBtn.style.display = 'none';   // 隐藏菜单按钮
             });
+
             overlay.addEventListener('click', closeSidebar);
             document.getElementById('mainContent').addEventListener('click', function(e) {
                 if (sidebar.classList.contains('open') && !e.target.closest('.sidebar-toggle')) {
@@ -679,8 +717,12 @@
         }
 
         function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('active');
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            toggleBtn.style.display = '';   // 显示菜单按钮
         }
 
         document.addEventListener('DOMContentLoaded', () => {
