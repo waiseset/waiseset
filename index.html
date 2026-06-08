@@ -227,7 +227,7 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         .empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.6; }
 
-        /* 通用图片视图样式 */
+        /* 图片视图 */
         .image-view {
             flex: 1;
             display: flex;
@@ -244,19 +244,6 @@
             box-shadow: var(--shadow-hover);
             background: #fff;
             padding: 10px;
-        }
-        .image-view .close-btn {
-            background: var(--btn-bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background var(--transition);
-        }
-        .image-view .close-btn:hover {
-            background: var(--btn-hover);
         }
 
         .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
@@ -320,7 +307,6 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="app-layout">
-        <!-- 侧边栏 -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="avatar">
@@ -343,7 +329,6 @@
                 </div>
             </div>
             <div class="sidebar-actions">
-                <!-- 主页按钮改为 button -->
                 <button class="btn" id="homeBtn">🏠 主页</button>
                 <button class="btn btn-sponsor" id="sponsorBtn">❤️ 赞助</button>
             </div>
@@ -352,7 +337,6 @@
             <ul class="nav-list" id="navList"></ul>
         </aside>
 
-        <!-- 主内容区 -->
         <main class="main-content" id="mainContent">
             <div id="defaultView">
                 <div class="search-wrapper">
@@ -364,24 +348,22 @@
                 <div class="link-grid" id="linkGrid"></div>
             </div>
 
-            <!-- 赞助视图 -->
+            <!-- 赞助视图（无返回按钮） -->
             <div id="sponsorView" class="image-view" style="display: none;">
                 <img 
                     src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
                     alt="赞助二维码"
                     onerror="this.onerror=null;this.src='images/赞助.svg';"
                 >
-                <button class="close-btn" id="closeSponsorBtn">← 返回导航</button>
             </div>
 
-            <!-- 主页视图 -->
+            <!-- 主页视图（无返回按钮） -->
             <div id="homeView" class="image-view" style="display: none;">
                 <img 
                     src="https://r2.image-upload.app/tyImg/rGkx0s2d.png"
                     alt="主页图片"
                     onerror="this.onerror=null;this.src='images/主页.svg';"
                 >
-                <button class="close-btn" id="closeHomeBtn">← 返回导航</button>
             </div>
 
             <p class="footer">© 2026 我的导航页 · 简洁即美</p>
@@ -389,7 +371,7 @@
     </div>
 
     <script>
-        // 分类数据
+        // 分类数据（与之前相同，省略...）
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -520,40 +502,39 @@
         let currentCategoryId = 'all';
         let isSearching = false;
 
-        // 视图元素
         const defaultView = document.getElementById('defaultView');
         const sponsorView = document.getElementById('sponsorView');
         const homeView = document.getElementById('homeView');
 
-        // 隐藏所有视图
         function hideAllViews() {
             defaultView.style.display = 'none';
             sponsorView.style.display = 'none';
             homeView.style.display = 'none';
         }
 
-        // 显示赞助视图
-        document.getElementById('sponsorBtn').addEventListener('click', () => {
+        function showDefaultView() {
             hideAllViews();
-            sponsorView.style.display = 'flex';
-        });
+            defaultView.style.display = 'block';
+        }
 
-        // 显示主页视图
+        // 主页按钮：切换视图
         document.getElementById('homeBtn').addEventListener('click', () => {
-            hideAllViews();
-            homeView.style.display = 'flex';
+            if (homeView.style.display === 'flex') {
+                showDefaultView();
+            } else {
+                hideAllViews();
+                homeView.style.display = 'flex';
+            }
         });
 
-        // 关闭赞助视图
-        document.getElementById('closeSponsorBtn').addEventListener('click', () => {
-            hideAllViews();
-            defaultView.style.display = 'block';
-        });
-
-        // 关闭主页视图
-        document.getElementById('closeHomeBtn').addEventListener('click', () => {
-            hideAllViews();
-            defaultView.style.display = 'block';
+        // 赞助按钮：切换视图
+        document.getElementById('sponsorBtn').addEventListener('click', () => {
+            if (sponsorView.style.display === 'flex') {
+                showDefaultView();
+            } else {
+                hideAllViews();
+                sponsorView.style.display = 'flex';
+            }
         });
 
         // 渲染导航
@@ -614,6 +595,8 @@
             document.getElementById('searchInfo').classList.remove('visible');
             updateSearchPlaceholder();
             updateNavActive();
+            // 强制切回导航视图
+            showDefaultView();
             renderLinks();
             closeSidebar();
         }
@@ -681,6 +664,10 @@
             const searchInfo = document.getElementById('searchInfo');
 
             searchInput.addEventListener('input', function() {
+                // 如果在图片视图，自动切回导航
+                if (defaultView.style.display === 'none') {
+                    showDefaultView();
+                }
                 const query = this.value.trim().toLowerCase();
                 if (query === '') {
                     isSearching = false;
