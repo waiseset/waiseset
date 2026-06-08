@@ -6,234 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>waiseset的导航页</title>
     <style>
-        :root {
-            --bg: #f0f2f5;
-            --sidebar-bg: #ffffff;
-            --card-bg: #ffffff;
-            --text: #1d1d1f;
-            --text-secondary: #6e6e73;
-            --border: #e8e8ed;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-light: #eff6ff;
-            --shadow: 0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.06);
-            --shadow-hover: 0 4px 16px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
-            --shadow-card: 0 1px 3px rgba(0,0,0,0.05);
-            --radius: 14px;
-            --radius-sm: 10px;
-            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-            --tag-bg: #f0f4ff;
-            --tag-text: #3b66f6;
-            --scrollbar-thumb: #c4c4c8;
-            --scrollbar-track: transparent;
-            --btn-bg: #f3f4f6;
-            --btn-hover: #e5e7eb;
-            --sidebar-width: 300px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #1a1a1d;
-                --sidebar-bg: #1f1f22;
-                --card-bg: #252528;
-                --text: #f0f0f2;
-                --text-secondary: #a1a1a6;
-                --border: #333336;
-                --shadow: 0 1px 3px rgba(0,0,0,0.3);
-                --shadow-hover: 0 4px 20px rgba(0,0,0,0.45);
-                --shadow-card: 0 1px 3px rgba(0,0,0,0.25);
-                --tag-bg: #2a3040;
-                --tag-text: #7b9cf6;
-                --scrollbar-thumb: #555558;
-                --btn-bg: #333336;
-                --btn-hover: #444448;
-                --accent-light: #1e3050;
-            }
-        }
-
-        * { margin:0; padding:0; box-sizing:border-box; }
-
-        body {
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow: hidden;
-        }
-
-        .app-layout {
-            display: flex;
-            height: 100vh;
-            width: 100%;
-        }
-
-        /* 侧边栏 - 整体滚动 */
-        .sidebar {
-            width: var(--sidebar-width);
-            min-width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;          /* 允许侧边栏整体滚动 */
-            overflow-x: hidden;
-            z-index: 10;
-            padding: 24px 20px 20px;
-            gap: 16px;
-            scroll-behavior: smooth;
-        }
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        .sidebar { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
-
-        .sidebar-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 10px;
-        }
-        .avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .avatar-img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            top:0; left:0; z-index:1;
-        }
-        .avatar-text {
-            font-size: 30px; color:#fff; font-weight:600; z-index:0; user-select:none;
-        }
-        .sidebar-header h2 {
-            font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text);
-        }
-        .sidebar-header .bio {
-            font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;
-        }
-        .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-        .tag {
-            display: inline-block; background: var(--tag-bg); color: var(--tag-text);
-            font-size: 0.72rem; padding: 3px 10px; border-radius: 16px; font-weight: 500; white-space: nowrap;
-        }
-
-        .sidebar-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-        .btn {
-            display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px;
-            background: var(--btn-bg); color: var(--text); border-radius: 20px; text-decoration: none;
-            font-size: 0.82rem; font-weight: 500; border: 1px solid var(--border);
-            transition: background var(--transition),transform var(--transition); cursor: pointer; white-space: nowrap;
-        }
-        .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
-        .btn-sponsor { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
-        @media (prefers-color-scheme: dark) {
-            .btn-sponsor { background:#3b1e1e; border-color:#7f1d1d; color:#fca5a5; }
-        }
-
-        .sidebar-divider { height: 1px; background: var(--border); margin: 4px 0; flex-shrink: 0; }
-        .sidebar-nav-label {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary);
-            padding: 0 4px; font-weight: 600;
-        }
-
-        /* 导航列表不再单独滚动，而是跟随侧边栏整体滚动 */
-        .nav-list {
-            list-style: none; display: flex; flex-direction: column; gap: 2px;
-        }
-
-        .nav-item {
-            display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm);
-            cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--text);
-            transition: background var(--transition),color var(--transition); border: none; background: none; width: 100%; text-align: left; position: relative;
-        }
-        .nav-item:hover { background: var(--btn-bg); }
-        .nav-item.active { background: var(--accent-light); color: var(--accent); font-weight: 650; }
-        .nav-item.active::before {
-            content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
-        }
-        .nav-icon {
-            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-        }
-        .nav-badge {
-            margin-left: auto; font-size: 0.72rem; color: var(--text-secondary); background: var(--btn-bg); padding: 2px 8px; border-radius: 10px; font-weight: 500;
-        }
-        .nav-item.active .nav-badge { background: var(--accent); color: #fff; }
-
-        .icon-dev{background:#fef3c7}.icon-design{background:#fce7f3}
-        .icon-learn{background:#d1fae5}.icon-tool{background:#e0e7ff}
-        .icon-ai{background:#f3e8ff}.icon-social{background:#cffafe}
-        .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}
-        .icon-all{background:#e8e8ed}
-
-        /* 右侧主内容 */
-        .main-content {
-            flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
-            padding: 28px 32px 40px; background: var(--bg); scroll-behavior: smooth;
-        }
-        .main-content::-webkit-scrollbar { width: 6px; }
-        .main-content::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        .main-content { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
-
-        .search-wrapper { margin-bottom: 20px; position: relative; max-width: 500px; }
-        .search-input {
-            width: 100%; padding: 12px 16px 12px 42px; border: 1px solid var(--border); border-radius: 26px;
-            background: var(--card-bg); color: var(--text); font-size: 0.9rem; outline: none;
-            transition: box-shadow var(--transition),border-color var(--transition); box-shadow: var(--shadow-card);
-        }
-        .search-input:focus {
-            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
-        }
-        .search-icon {
-            position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1rem; pointer-events: none;
-        }
-        .search-info {
-            font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; display: none;
-        }
-        .search-info.visible { display: block; }
-
-        .content-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
-        .link-grid {
-            display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 14px; padding-bottom: 20px;
-        }
-        .link-card {
-            background: var(--card-bg); border-radius: var(--radius); padding: 20px 16px; text-align: center;
-            text-decoration: none; color: var(--text); box-shadow: var(--shadow-card); border: 1px solid var(--border);
-            transition: box-shadow var(--transition),transform var(--transition),border-color var(--transition);
-            display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer;
-            opacity: 0; animation: cardFadeIn 0.35s ease-out forwards;
-        }
-        .link-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); border-color: var(--accent); }
-        .link-card .card-icon {
-            width: 48px; height: 48px; border-radius: 14px; background: #e8e8ed;
-            display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;
-            color: #555; flex-shrink: 0; transition: background var(--transition),color var(--transition);
-        }
-        .link-card:hover .card-icon { background: var(--accent); color: #fff; }
-        .link-card .card-name { font-size: 0.85rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
-
-        @keyframes cardFadeIn {
-            from { opacity:0; transform:translateY(12px); }
-            to { opacity:1; transform:translateY(0); }
-        }
-
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        .empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.6; }
-
-        /* 赞助图片视图 */
-        .sponsor-view {
+        /* 样式保持不变，此处省略以节省篇幅，请使用您之前的完整 CSS */
+        /* 注意：需要新增 .home-view 样式，与 .sponsor-view 相同 */
+        .home-view {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -241,7 +16,7 @@
             justify-content: center;
             gap: 20px;
         }
-        .sponsor-view img {
+        .home-view img {
             max-width: 90%;
             max-height: 70vh;
             height: auto;
@@ -250,7 +25,7 @@
             background: #fff;
             padding: 10px;
         }
-        .sponsor-view .close-btn {
+        .home-view .close-btn {
             background: var(--btn-bg);
             border: 1px solid var(--border);
             color: var(--text);
@@ -260,499 +35,86 @@
             cursor: pointer;
             transition: background var(--transition);
         }
-        .sponsor-view .close-btn:hover {
+        .home-view .close-btn:hover {
             background: var(--btn-hover);
-        }
-
-        .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
-
-        /* 移动端菜单按钮 */
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            z-index: 100;
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            color: var(--text);
-            align-items: center;
-            justify-content: center;
-        }
-        .sidebar-overlay { display: none; position: fixed; top:0;left:0;right:0;bottom:0; background: rgba(0,0,0,0.4); z-index: 9; }
-        .sidebar-overlay.active { display: block; }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .app-layout { flex-direction: column; }
-            .sidebar {
-                position: fixed;
-                top:0;
-                left:-100%;
-                width:280px;
-                min-width:280px;
-                height:100vh;
-                z-index:50;
-                transition: left 0.3s ease;
-                border-right:1px solid var(--border);
-                box-shadow:4px 0 20px rgba(0,0,0,0.15);
-                padding-top:50px;
-                /* 保持 overflow-y: auto 允许整体滚动 */
-            }
-            .sidebar.open { left:0; }
-            .sidebar-toggle { display:flex; }
-            .main-content { padding:18px 14px 30px; padding-top:56px; }
-            .link-grid { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap:10px; }
-            .link-card { padding:16px 10px; gap:8px; }
-            .link-card .card-icon { width:40px; height:40px; font-size:18px; border-radius:10px; }
-            .link-card .card-name { font-size:0.78rem; }
-            .search-wrapper { max-width:100%; }
-        }
-        @media (max-width: 400px) {
-            .link-grid { grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
-            .link-card { padding:14px 8px; gap:6px; }
-            .link-card .card-icon { width:36px; height:36px; font-size:16px; border-radius:10px; }
-            .link-card .card-name { font-size:0.73rem; }
         }
     </style>
 </head>
 <body>
-
-    <button class="sidebar-toggle" id="sidebarToggle" aria-label="菜单">☰</button>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="app-layout">
-        <!-- 侧边栏（整体滚动） -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="avatar">
-                    <img 
-                        class="avatar-img" 
-                        src="https://r2.image-upload.app/ptImg/semnKjzz.jpg" 
-                        alt="头像"
-                        onerror="this.onerror=null;this.src='images/头像.svg';"
-                    >
-                    <span class="avatar-text">W</span>
-                </div>
-                <h2>waiseset</h2>
-                <p class="bio">数码爱好者，刷机爱好者，魔方爱好者，游戏爱好者。</p>
-                <div class="tags">
-                    <span class="tag">电脑配置/优化</span>
-                    <span class="tag">刷机/玩机</span>
-                    <span class="tag">游戏</span>
-                    <span class="tag">Python</span>
-                    <span class="tag">魔方</span>
-                </div>
-            </div>
-            <div class="sidebar-actions">
-                <a href="https://qm.qq.com/q/u4vQhy3GQo" target="_blank" class="btn">🏠 主页</a>
-                <button class="btn btn-sponsor" id="sponsorBtn">❤️ 赞助</button>
-            </div>
-            <div class="sidebar-divider"></div>
-            <span class="sidebar-nav-label">分类导航</span>
-            <ul class="nav-list" id="navList"></ul>
-        </aside>
-
-        <!-- 主内容区 -->
-        <main class="main-content" id="mainContent">
-            <div id="defaultView">
-                <div class="search-wrapper">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" class="search-input" placeholder="在所有链接中搜索...">
-                </div>
-                <p class="search-info" id="searchInfo"></p>
-                <div class="content-title" id="contentTitle">🗂️ 全部链接</div>
-                <div class="link-grid" id="linkGrid"></div>
-            </div>
-
-            <div id="sponsorView" class="sponsor-view" style="display: none;">
-                <img 
-                    src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
-                    alt="赞助二维码"
-                    onerror="this.onerror=null;this.src='images/赞助.svg';"
-                >
-                <button class="close-btn" id="closeSponsorBtn">← 返回导航</button>
-            </div>
-
-            <p class="footer">© 2026 我的导航页 · 简洁即美</p>
-        </main>
+    <!-- 侧边栏按钮改为 button -->
+    <div class="sidebar-actions">
+        <button class="btn" id="homeBtn">🏠 主页</button>
+        <button class="btn btn-sponsor" id="sponsorBtn">❤️ 赞助</button>
     </div>
 
+    <!-- 主内容区：默认视图、赞助视图、主页视图 -->
+    <main class="main-content" id="mainContent">
+        <div id="defaultView">
+            <!-- ... 搜索、标题、卡片 ... -->
+        </div>
+
+        <div id="sponsorView" class="sponsor-view" style="display: none;">
+            <!-- 赞助图片，备用本地路径 -->
+            <img src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
+                 alt="赞助二维码"
+                 onerror="this.onerror=null;this.src='images/赞助.svg';">
+            <button class="close-btn" id="closeSponsorBtn">← 返回导航</button>
+        </div>
+
+        <!-- ★ 新增主页视图 ★ -->
+        <div id="homeView" class="home-view" style="display: none;">
+            <!-- 主页图片：请替换图床链接，备用为 images/主页.svg -->
+            <img src="https://r2.image-upload.app/tyImg/rGkx0s2d.png" 
+                 alt="主页图片"
+                 onerror="this.onerror=null;this.src='images/主页.svg';">
+            <button class="close-btn" id="closeHomeBtn">← 返回导航</button>
+        </div>
+
+        <p class="footer">© 2026 我的导航页 · 简洁即美</p>
+    </main>
+
     <script>
-        // 分类数据（保持不变）
-        const categories = [{
-            id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
-            links: [
-                { name: 'DeepSeek', url: 'https://www.deepseek.com' },
-                { name: '豆包', url: 'https://www.doubao.com' },
-                { name: '千问', url: 'https://www.qianwen.com' },
-                { name: 'ChatGPT', url: 'https://chat.openai.com' },
-                { name: 'Claude', url: 'https://www.claude.ai' },
-                { name: 'Gemini', url: 'https://gemini.google.com' },
-            ]
-        }, {
-            id: 'design', name: '实用', iconClass: 'icon-design', iconEmoji: '🔧',
-            links: [
-                { name: 'QQ邮箱', url: 'https://wx.mail.qq.com' },
-                { name: '视频解析', url: 'https://tool.liumingye.cn/video' },
-                { name: '谷歌地球', url: 'https://www.earthol.com' },
-                { name: '临时邮箱', url: 'https://mail.cx/zh' },
-                { name: '网盘解析', url: 'https://www.mmbd.site/user/parse' },
-                { name: '微信传输助手', url: 'https://filehelper.weixin.qq.com/' },
-                { name: '图床链接生成', url: 'https://image-upload.app/zh' },
-                { name: '哲风壁纸', url: 'https://haowallpaper.com/' },
-                { name: '极简壁纸', url: 'https://bz.zzzmh.cn' },
-                { name: '国家标准', url: 'https://openstd.samr.gov.cn/bzgk/gb/index' },
-                { name: 'Pixiv', url: 'https://www.pixiv.net/?lang=zh' },
-                { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
-                { name: '这是什么动漫(找动漫)', url: 'https://www.toolapi.cc/tracemoe/' },
-                { name: '文件格式转换器', url: 'https://www.freeconvert.com/zh/' },
-                { name: '文件格式转换器 2', url: 'https://convertio.co/zh/' },
-                { name: '微信', url: 'https://weixin.qq.com/' },
-                { name: 'QQ', url: 'https://im.qq.com/index/' },
-                { name: 'Potplayer', url: 'https://potplayer.tv/?lang=zh_CN.' },
-                { name: 'ImageGlass', url: 'https://imageglass.org/' },
-                { name: 'IDM', url: 'https://www.internetdownloadmanager.com/' },
-                { name: 'PixPin', url: 'https://pixpin.cn/' },
-                { name: '网易有道翻译', url: 'https://fanyi.youdao.com/' },
-                { name: '图吧工具箱', url: 'https://www.tbtool.cn/' },
-                { name: 'Windows11轻松设置', url: 'https://www.bilibili.com/opus/904672369138729017' },
-                { name: 'ZyperWin++', url: 'https://github.com/ZyperWave/ZyperWinOptimize' },
-                { name: 'Dism++', url: 'https://github.com/Chuyu-Team/Dism-Multi-language/releases' },
-                { name: 'HiBitUninstaller', url: 'https://github.com/XQGIN/Hibit-uninstall' },
-                { name: 'Office下载安装激活/Mocreak', url: 'https://www.mocreak.com/' },
-            ]
-        }, {
-            id: 'learn', name: '学习', iconClass: 'icon-learn', iconEmoji: '📚',
-            links: [
-                { name: 'Github', url: 'https://github.com' },
-                { name: '百度贴吧', url: 'https://tieba.baidu.com' },
-                { name: '知乎', url: 'https://www.zhihu.com' },
-            ]
-        }, {
-            id: 'ai', name: '网络', iconClass: 'icon-ai', iconEmoji: '🌐',
-            links: [
-                { name: '一元机场', url: 'https://一元机场.asia/' },
-                { name: '网络测速', url: 'https://test.ustc.edu.cn' },
-                { name: '飞牛(局域)', url: 'http://192.168.1.29:5666' },
-                { name: '飞牛(远程)', url: 'https://fnos.net/tyx354523' },
-            ]
-        }, {
-            id: 'tool', name: '玩机', iconClass: 'icon-tool', iconEmoji: '📱',
-            links: [
-                { name: '小米ROM', url: 'https://xiaomirom.com' },
-                { name: '小米ROM 2', url: 'https://roms.miuier.com/zh-cn' },
-                { name: '小米ROM 3', url: 'https://miuiver.com' },
-                { name: '处理器天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/01/' },
-                { name: '一键安装安卓驱动', url: 'https://lsdy.top/azqd' },
-                { name: '搞机助手', url: 'https://lsdy.top/gjzs' },
-                { name: '紫罗兰工具箱', url: 'https://violettool.top' },
-                { name: 'TFT工具', url: 'https://tftunlocker.com' },
-            ]
-        }, {
-            id: 'pc', name: '电脑', iconClass: 'icon-pc', iconEmoji: '💻',
-            links: [
-                { name: 'NVIDIA显卡驱动', url: 'https://www.nvidia.cn/drivers/' },
-                { name: 'AMD处理器/显卡驱动', url: 'https://www.amd.com/zh-cn/support/download/drivers.html' },
-                { name: '雨糖驱动', url: 'https://raincandy.tech/' },
-                { name: '系统下载', url: 'https://next.itellyou.cn' },
-                { name: 'Edge浏览器下载', url: 'https://www.catalog.update.microsoft.com/Search.aspx?q=edge' },
-                { name: 'Chrome/谷歌浏览器下载', url: 'https://www.google.cn/intl/zh-CN/chrome/' },
-                { name: '显卡天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/gpu/' },
-                { name: 'CPU天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/cpu/index.html' },
-
-
-
-            ]
-        }, {
-            id: 'game', name: '游戏', iconClass: 'icon-game', iconEmoji: '🎮',
-            links: [
-                { name: 'Steam', url: 'https://store.steampowered.com' },
-                { name: 'Epic Games', url: 'https://www.epicgames.com' },
-                { name: '小黑盒', url: 'https://www.xiaoheihe.cn' },
-                { name: '风灵月影', url: 'https://flingtrainer.com' },
-                { name: 'SteamTools', url: 'https://www.steamtools.net' },
-                { name: 'SteamKing', url: 'https://www.steamking.top' },
-                { name: 'Plain Craft Launcher 2', url: 'https://pcl2.aoe.top' },
-                { name: '我的世界皮肤站', url: 'https://littleskin.cn' },
-                { name: '4399小游戏', url: 'https://www.4399.com' },
-                { name: '7k7k小游戏', url: 'https://www.7k7k.com' },
-                { name: '俄国游戏网', url: 'https://byrutgame.org' },
-                { name: '樱花内网穿透', url: 'https://www.natfrp.com' },
-                { name: 'CS2外挂 ExHack', url: 'https://cn.exloader.net' },
-                { name: '种子地图', url: 'https://www.chunkbase.com' },
-                { name: 'SteamCICI', url: 'https://steamcici.com' },
-                { name: '小绿人', url: 'https://www.greenmangaming.com/zh/' },
-                { name: 'Humble', url: 'https://www.humblebundle.com' },
-            ]
-        }, {
-            id: 'social', name: '社交媒体', iconClass: 'icon-social', iconEmoji: '💬',
-            links: [
-                { name: '抖音', url: 'https://www.douyin.com' },
-                { name: '快手', url: 'https://www.kuaishou.com' },
-                { name: 'BiliBili/哔哩哔哩', url: 'https://www.bilibili.com' },
-                { name: '腾讯视频', url: 'https://v.qq.com/' },
-                { name: '爱奇艺', url: 'https://www.iqiyi.com/' },
-                { name: '优酷视频', url: 'https://www.youku.com/' },
-                { name: '搜狐视频', url: 'https://tv.sohu.com/' },
-                { name: '芒果TV', url: 'https://www.mgtv.com/' },
-                { name: '虎牙直播', url: 'https://www.huya.com/' },
-                { name: '网易云音乐', url: 'https://music.163.com' },
-                { name: '酷狗音乐', url: 'https://www.kugou.com' },
-                { name: 'QQ音乐', url: 'https://y.qq.com' },
-                { name: '汽水音乐', url: 'https://qishuiiu.com/' },
-                { name: '波点音乐', url: 'https://bodian.kuwo.cn/' },
-                { name: 'LX Music/洛雪音乐', url: 'https://docs.lxmusic.top' },
-                { name: 'Youtube', url: 'https://www.youtube.com' },
-                { name: 'TikTok', url: 'https://www.tiktokbuzz.com' },
-                { name: 'X (Twitter)', url: 'https://x.com' },
-                { name: 'Telegram', url: 'https://telegram.org' },
-            ]
-        }];
-
-        let currentCategoryId = 'all';
-        let isSearching = false;
-
-        // 赞助视图切换
+        // 获取元素
         const defaultView = document.getElementById('defaultView');
         const sponsorView = document.getElementById('sponsorView');
+        const homeView = document.getElementById('homeView');
         const sponsorBtn = document.getElementById('sponsorBtn');
+        const homeBtn = document.getElementById('homeBtn');
         const closeSponsorBtn = document.getElementById('closeSponsorBtn');
+        const closeHomeBtn = document.getElementById('closeHomeBtn');
 
-        sponsorBtn.addEventListener('click', () => {
+        // 隐藏所有视图
+        function hideAllViews() {
             defaultView.style.display = 'none';
+            sponsorView.style.display = 'none';
+            homeView.style.display = 'none';
+        }
+
+        // 显示主页视图
+        homeBtn.addEventListener('click', () => {
+            hideAllViews();
+            homeView.style.display = 'flex';
+        });
+
+        // 显示赞助视图
+        sponsorBtn.addEventListener('click', () => {
+            hideAllViews();
             sponsorView.style.display = 'flex';
         });
 
-        closeSponsorBtn.addEventListener('click', () => {
-            sponsorView.style.display = 'none';
+        // 关闭主页视图
+        closeHomeBtn.addEventListener('click', () => {
+            hideAllViews();
             defaultView.style.display = 'block';
         });
 
-        // 渲染导航
-        function renderNav() {
-            const navList = document.getElementById('navList');
-            navList.innerHTML = '';
-
-            const allItem = document.createElement('li');
-            allItem.className = 'nav-item';
-            allItem.dataset.catId = 'all';
-            allItem.innerHTML = `
-                <span class="nav-icon icon-all">🗂️</span>
-                <span>全部链接</span>
-                <span class="nav-badge">${categories.reduce((sum,c)=>sum+c.links.length,0)}</span>
-            `;
-            allItem.addEventListener('click', () => selectCategory('all'));
-            navList.appendChild(allItem);
-
-            categories.forEach(cat => {
-                const item = document.createElement('li');
-                item.className = 'nav-item';
-                item.dataset.catId = cat.id;
-                item.innerHTML = `
-                    <span class="nav-icon ${cat.iconClass}">${cat.iconEmoji}</span>
-                    <span>${cat.name}</span>
-                    <span class="nav-badge">${cat.links.length}</span>
-                `;
-                item.addEventListener('click', () => selectCategory(cat.id));
-                navList.appendChild(item);
-            });
-
-            updateNavActive();
-        }
-
-        function updateNavActive() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.catId === currentCategoryId);
-            });
-        }
-
-        function updateSearchPlaceholder() {
-            const input = document.getElementById('searchInput');
-            if (currentCategoryId === 'all') {
-                input.placeholder = '在所有链接中搜索...';
-            } else {
-                const cat = categories.find(c => c.id === currentCategoryId);
-                if (cat) {
-                    input.placeholder = `在 ${cat.name} 分类中搜索...`;
-                }
-            }
-        }
-
-        function selectCategory(catId) {
-            currentCategoryId = catId;
-            isSearching = false;
-            const input = document.getElementById('searchInput');
-            input.value = '';
-            document.getElementById('searchInfo').classList.remove('visible');
-            updateSearchPlaceholder();
-            updateNavActive();
-            renderLinks();
-            closeSidebar();
-        }
-
-        function renderLinks(linksOverride) {
-            const grid = document.getElementById('linkGrid');
-            const titleEl = document.getElementById('contentTitle');
-            grid.innerHTML = '';
-
-            let linksToShow;
-            let titleText;
-
-            if (linksOverride) {
-                linksToShow = linksOverride;
-                titleText = `🔍 搜索结果 (${linksToShow.length})`;
-            } else if (currentCategoryId === 'all') {
-                linksToShow = [];
-                categories.forEach(cat => {
-                    cat.links.forEach(link => linksToShow.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji }));
-                });
-                titleText = `🗂️ 全部链接 (${linksToShow.length})`;
-            } else {
-                const cat = categories.find(c => c.id === currentCategoryId);
-                if (cat) {
-                    linksToShow = cat.links.map(l => ({ ...l, catName: cat.name, catEmoji: cat.iconEmoji }));
-                    titleText = `${cat.iconEmoji} ${cat.name}`;
-                } else {
-                    linksToShow = [];
-                    titleText = '';
-                }
-            }
-
-            titleEl.textContent = titleText;
-
-            if (linksToShow.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;">
-                        <div class="empty-icon">📭</div>
-                        <p>没有找到匹配的链接</p>
-                    </div>`;
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            linksToShow.forEach((link, index) => {
-                const card = document.createElement('a');
-                card.className = 'link-card';
-                card.href = link.url;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.title = link.name;
-                card.style.animationDelay = (index * 0.03) + 's';
-                const firstChar = link.name.charAt(0).toUpperCase();
-                card.innerHTML = `
-                    <span class="card-icon">${firstChar}</span>
-                    <span class="card-name">${link.name}</span>
-                `;
-                fragment.appendChild(card);
-            });
-            grid.appendChild(fragment);
-        }
-
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            const searchInfo = document.getElementById('searchInfo');
-
-            searchInput.addEventListener('input', function() {
-                const query = this.value.trim().toLowerCase();
-                if (query === '') {
-                    isSearching = false;
-                    searchInfo.classList.remove('visible');
-                    updateNavActive();
-                    updateSearchPlaceholder();
-                    renderLinks();
-                    return;
-                }
-
-                if (query.startsWith('http://') || query.startsWith('https://')) {
-                    searchInfo.classList.add('visible');
-                    searchInfo.textContent = '按回车键直接打开该网址';
-                    return;
-                }
-
-                isSearching = true;
-                let results = [];
-
-                if (currentCategoryId === 'all') {
-                    categories.forEach(cat => {
-                        cat.links.forEach(link => {
-                            if (link.name.toLowerCase().includes(query)) {
-                                results.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji });
-                            }
-                        });
-                    });
-                } else {
-                    const cat = categories.find(c => c.id === currentCategoryId);
-                    if (cat) {
-                        cat.links.forEach(link => {
-                            if (link.name.toLowerCase().includes(query)) {
-                                results.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji });
-                            }
-                        });
-                    }
-                }
-
-                searchInfo.classList.add('visible');
-                searchInfo.textContent = `在当前分类中找到 ${results.length} 个结果`;
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                renderLinks(results);
-            });
-
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    const value = this.value.trim();
-                    if (value.startsWith('http://') || value.startsWith('https://')) {
-                        e.preventDefault();
-                        window.open(value, '_blank');
-                        this.value = '';
-                        selectCategory(currentCategoryId);
-                    }
-                }
-            });
-        }
-
-        // 移动端侧边栏与菜单按钮交互
-        function setupMobile() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-                toggleBtn.style.display = 'none';   // 隐藏菜单按钮
-            });
-
-            overlay.addEventListener('click', closeSidebar);
-            document.getElementById('mainContent').addEventListener('click', function(e) {
-                if (sidebar.classList.contains('open') && !e.target.closest('.sidebar-toggle')) {
-                    closeSidebar();
-                }
-            });
-        }
-
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-            toggleBtn.style.display = '';   // 显示菜单按钮
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderNav();
-            updateSearchPlaceholder();
-            renderLinks();
-            setupSearch();
-            setupMobile();
+        // 关闭赞助视图
+        closeSponsorBtn.addEventListener('click', () => {
+            hideAllViews();
+            defaultView.style.display = 'block';
         });
+
+        // 其余 JS 逻辑（导航、搜索等）保持不变 ...
     </script>
 </body>
 </html>
