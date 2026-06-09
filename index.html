@@ -177,6 +177,7 @@
         .main-content {
             flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
             padding: 28px 32px 40px; background: var(--bg); scroll-behavior: smooth;
+            position: relative;
         }
         .main-content::-webkit-scrollbar { width: 6px; }
         .main-content::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
@@ -246,6 +247,88 @@
             padding: 10px;
         }
 
+        /* 隐藏图片页 */
+        #secretImageView {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 16px 20px 16px 20px;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+            z-index: 5;
+        }
+        .secret-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .secret-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 0 12px 0;
+            margin-bottom: 4px;
+            justify-content: flex-start;
+        }
+        .secret-tabs button {
+            padding: 8px 18px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+            white-space: nowrap;
+        }
+        .secret-tabs button:hover {
+            background: var(--btn-hover);
+        }
+        .secret-tabs button.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .secret-image-area {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 16px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow-y: auto;
+            align-content: start;
+            min-height: 0;
+        }
+        .image-box {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 4px;
+        }
+        .placeholder-text {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px;
+        }
+
         .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
 
         .sidebar-toggle {
@@ -292,12 +375,16 @@
             .link-card .card-icon { width:40px; height:40px; font-size:18px; border-radius:10px; }
             .link-card .card-name { font-size:0.78rem; }
             .search-wrapper { max-width:100%; }
+            #secretImageView { padding: 12px 10px 12px 10px; }
+            .secret-image-area { grid-template-columns: repeat(2, 1fr); }
+            .secret-tabs button { padding: 7px 14px; font-size: 0.8rem; }
         }
         @media (max-width: 400px) {
             .link-grid { grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
             .link-card { padding:14px 8px; gap:6px; }
             .link-card .card-icon { width:36px; height:36px; font-size:16px; border-radius:10px; }
             .link-card .card-name { font-size:0.73rem; }
+            .secret-image-area { grid-template-columns: repeat(1, 1fr); }
         }
     </style>
 </head>
@@ -348,7 +435,6 @@
                 <div class="link-grid" id="linkGrid"></div>
             </div>
 
-            <!-- 赞助视图（无返回按钮） -->
             <div id="sponsorView" class="image-view" style="display: none;">
                 <img 
                     src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
@@ -357,7 +443,6 @@
                 >
             </div>
 
-            <!-- 主页视图（无返回按钮） -->
             <div id="homeView" class="image-view" style="display: none;">
                 <img 
                     src="https://r2.image-upload.app/tyImg/rGkx0s2d.png"
@@ -366,12 +451,27 @@
                 >
             </div>
 
+            <!-- 隐藏图片页 -->
+            <div id="secretImageView">
+                <div class="secret-container">
+                    <div class="secret-tabs" id="secretTabs"></div>
+                    <div class="secret-image-area" id="secretImageArea">
+                        <p class="placeholder-text">请选择一个分区查看图片</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="secretLinksView" style="display: none; flex-direction: column; flex: 1; padding: 28px 32px; overflow-y: auto;">
+                <h2 style="margin-bottom: 20px;">🔮 隐藏网站</h2>
+                <div class="link-grid" id="secretLinkGrid"></div>
+            </div>
+
             <p class="footer">© 2026 我的导航页 · 简洁即美</p>
         </main>
     </div>
 
     <script>
-        // 分类数据（与之前相同，省略...）
+        // 分类数据
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -395,7 +495,6 @@
                 { name: '哲风壁纸', url: 'https://haowallpaper.com/' },
                 { name: '极简壁纸', url: 'https://bz.zzzmh.cn' },
                 { name: '国家标准', url: 'https://openstd.samr.gov.cn/bzgk/gb/index' },
-                { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
                 { name: '这是什么动漫(找动漫)', url: 'https://www.toolapi.cc/tracemoe/' },
                 { name: '文件格式转换器', url: 'https://www.freeconvert.com/zh/' },
                 { name: '文件格式转换器 2', url: 'https://convertio.co/zh/' },
@@ -492,7 +591,6 @@
                 { name: '汽水音乐', url: 'https://qishuiiu.com/' },
                 { name: '波点音乐', url: 'https://bodian.kuwo.cn/' },
                 { name: 'LX Music/洛雪音乐', url: 'https://docs.lxmusic.top' },
-                { name: 'Pixiv', url: 'https://www.pixiv.net/?lang=zh' },
                 { name: 'Youtube', url: 'https://www.youtube.com' },
                 { name: 'TikTok', url: 'https://www.tiktokbuzz.com' },
                 { name: 'X (Twitter)', url: 'https://x.com' },
@@ -500,17 +598,91 @@
             ]
         }];
 
+        // 隐藏网站数据
+        const secretLinks = [
+                { name: 'Pixiv(P站)', url: 'https://www.pixiv.net/' },
+                { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
+        ];
+
+        // 隐藏图片分区数据（已修复所有逗号错误）
+        const secretImageSections = [
+            {
+                name: '蛤蟆',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/18AMViysZ.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/15yNEJR9q.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/OAbRif3N.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/EXfegWmq.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/jeIWtdNH.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/11AnFtUX2.jpg' }
+                ]
+            },
+            {
+                name: '河马',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/i4kUwk59.gif' },
+                    { url: 'https://r2.image-upload.app/ptImg/9SJ05m3c.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/AD3sZNch.jpg' }
+                ]
+            },
+            {
+                name: '豆豆',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/p6wAzcPv.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/1dl2bIIDp.jpg' },
+                ]
+            },
+            {
+                name: '睾丸',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/dTu9cjni.jpg' }
+                ]
+            },
+            {
+                name: '壮壮',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/1fJlMg6ug.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/lwaLHoRC.jpg' }
+                ]
+            },
+            {
+                name: '巧克力',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/RwbRmYcB.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/fs04wf9I.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/5W2FAj4P.jpg' },
+                    { url: 'https://r2.image-upload.app/ptImg/ELdByzVo.jpg' }
+                ]
+            },
+            {
+                name: '老金',
+                images: [
+                    { url: 'https://r2.image-upload.app/ptImg/eHA2X4Mq.jpg' }
+                ]
+            }
+        ];
+
         let currentCategoryId = 'all';
         let isSearching = false;
+
+        let homeClickCount = 0;
+        let sponsorClickCount = 0;
+        let homeClickTimer = null;
+        let sponsorClickTimer = null;
+        const CLICK_LIMIT = 10;
 
         const defaultView = document.getElementById('defaultView');
         const sponsorView = document.getElementById('sponsorView');
         const homeView = document.getElementById('homeView');
+        const secretImageView = document.getElementById('secretImageView');
+        const secretLinksView = document.getElementById('secretLinksView');
 
         function hideAllViews() {
             defaultView.style.display = 'none';
             sponsorView.style.display = 'none';
             homeView.style.display = 'none';
+            secretImageView.style.display = 'none';
+            secretLinksView.style.display = 'none';
         }
 
         function showDefaultView() {
@@ -518,8 +690,73 @@
             defaultView.style.display = 'block';
         }
 
-        // 主页按钮：切换视图
+        function renderSecretTabs() {
+            const tabs = document.getElementById('secretTabs');
+            tabs.innerHTML = '';
+            secretImageSections.forEach((section) => {
+                const btn = document.createElement('button');
+                btn.textContent = section.name;
+                btn.addEventListener('click', () => {
+                    tabs.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const area = document.getElementById('secretImageArea');
+                    area.innerHTML = '';
+                    section.images.forEach(imgData => {
+                        const box = document.createElement('div');
+                        box.className = 'image-box';
+                        const img = document.createElement('img');
+                        img.src = imgData.url;
+                        img.alt = section.name;
+                        img.loading = 'lazy';
+                        box.appendChild(img);
+                        area.appendChild(box);
+                    });
+                });
+                tabs.appendChild(btn);
+            });
+        }
+
+        function renderSecretLinks() {
+            const grid = document.getElementById('secretLinkGrid');
+            grid.innerHTML = '';
+            if (secretLinks.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><p>暂无隐藏网站，请在代码中添加</p></div>';
+                return;
+            }
+            secretLinks.forEach((link, index) => {
+                const card = document.createElement('a');
+                card.className = 'link-card';
+                card.href = link.url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+                card.title = link.name;
+                card.style.animationDelay = (index * 0.03) + 's';
+                const firstChar = link.name.charAt(0).toUpperCase();
+                card.innerHTML = `<span class="card-icon">${firstChar}</span><span class="card-name">${link.name}</span>`;
+                grid.appendChild(card);
+            });
+        }
+
         document.getElementById('homeBtn').addEventListener('click', () => {
+            homeClickCount++;
+            if (homeClickTimer) clearTimeout(homeClickTimer);
+            homeClickTimer = setTimeout(() => { homeClickCount = 0; }, 5000);
+
+            if (homeClickCount >= CLICK_LIMIT) {
+                homeClickCount = 0;
+                clearTimeout(homeClickTimer);
+                hideAllViews();
+                secretImageView.style.display = 'flex';
+                renderSecretTabs();
+                if (secretImageSections.length > 0) {
+                    const firstBtn = document.querySelector('#secretTabs button');
+                    if (firstBtn) firstBtn.click();
+                } else {
+                    document.getElementById('secretImageArea').innerHTML = '<p class="placeholder-text">暂无分区内容</p>';
+                }
+                return;
+            }
+
             if (homeView.style.display === 'flex') {
                 showDefaultView();
             } else {
@@ -528,8 +765,20 @@
             }
         });
 
-        // 赞助按钮：切换视图
         document.getElementById('sponsorBtn').addEventListener('click', () => {
+            sponsorClickCount++;
+            if (sponsorClickTimer) clearTimeout(sponsorClickTimer);
+            sponsorClickTimer = setTimeout(() => { sponsorClickCount = 0; }, 5000);
+
+            if (sponsorClickCount >= CLICK_LIMIT) {
+                sponsorClickCount = 0;
+                clearTimeout(sponsorClickTimer);
+                hideAllViews();
+                secretLinksView.style.display = 'flex';
+                renderSecretLinks();
+                return;
+            }
+
             if (sponsorView.style.display === 'flex') {
                 showDefaultView();
             } else {
@@ -538,7 +787,6 @@
             }
         });
 
-        // 渲染导航
         function renderNav() {
             const navList = document.getElementById('navList');
             navList.innerHTML = '';
@@ -596,7 +844,6 @@
             document.getElementById('searchInfo').classList.remove('visible');
             updateSearchPlaceholder();
             updateNavActive();
-            // 强制切回导航视图
             showDefaultView();
             renderLinks();
             closeSidebar();
@@ -665,7 +912,6 @@
             const searchInfo = document.getElementById('searchInfo');
 
             searchInput.addEventListener('input', function() {
-                // 如果在图片视图，自动切回导航
                 if (defaultView.style.display === 'none') {
                     showDefaultView();
                 }
