@@ -315,6 +315,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;               /* 鼠标指针 */
         }
         .image-box img {
             max-width: 100%;
@@ -327,6 +328,45 @@
             text-align: center;
             color: var(--text-secondary);
             padding: 40px;
+        }
+
+        /* 灯箱样式 */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 36px;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .lightbox-close:hover {
+            color: var(--accent);
         }
 
         .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
@@ -375,7 +415,9 @@
             .link-card .card-icon { width:40px; height:40px; font-size:18px; border-radius:10px; }
             .link-card .card-name { font-size:0.78rem; }
             .search-wrapper { max-width:100%; }
-            #secretImageView { padding: 12px 10px 12px 10px; }
+            #secretImageView {
+                padding: 60px 10px 12px 10px;   /* 增加顶部内边距，避开菜单按钮 */
+            }
             .secret-image-area { grid-template-columns: repeat(2, 1fr); }
             .secret-tabs button { padding: 7px 14px; font-size: 0.8rem; }
         }
@@ -468,6 +510,12 @@
 
             <p class="footer">© 2026 我的导航页 · 简洁即美</p>
         </main>
+    </div>
+
+    <!-- 图片灯箱 -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <img src="" alt="查看图片" id="lightboxImg">
     </div>
 
     <script>
@@ -600,11 +648,11 @@
 
         // 隐藏网站数据
         const secretLinks = [
-                { name: 'Pixiv(P站)', url: 'https://www.pixiv.net/' },
-                { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
+            { name: 'Pixiv(P站)', url: 'https://www.pixiv.net/' },
+            { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
         ];
 
-        // 隐藏图片分区数据（已修复所有逗号错误）
+        // 隐藏图片分区数据
         const secretImageSections = [
             {
                 name: '蛤蟆',
@@ -690,6 +738,23 @@
             defaultView.style.display = 'block';
         }
 
+        // 图片灯箱功能
+        function openLightbox(imgSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            lightboxImg.src = imgSrc;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
+        });
+
         function renderSecretTabs() {
             const tabs = document.getElementById('secretTabs');
             tabs.innerHTML = '';
@@ -708,6 +773,8 @@
                         img.src = imgData.url;
                         img.alt = section.name;
                         img.loading = 'lazy';
+                        // 点击图片放大
+                        img.addEventListener('click', () => openLightbox(imgData.url));
                         box.appendChild(img);
                         area.appendChild(box);
                     });
