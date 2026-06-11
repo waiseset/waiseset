@@ -520,7 +520,7 @@
     </div>
 
     <script>
-        // 分类数据
+        // 分类数据（已移除电脑分类，合并至实用分类）
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -572,6 +572,17 @@
                 { name: 'Dism++', url: 'https://github.com/Chuyu-Team/Dism-Multi-language/releases' },
                 { name: 'HiBitUninstaller', url: 'https://github.com/XQGIN/Hibit-uninstall' },
                 { name: 'Office下载安装激活/Mocreak', url: 'https://www.mocreak.com/' },
+                { name: 'NVIDIA显卡驱动', url: 'https://www.nvidia.cn/drivers/' },
+                { name: 'AMD处理器/显卡驱动', url: 'https://www.amd.com/zh-cn/support/download/drivers.html' },
+                { name: '雨糖驱动', url: 'https://raincandy.tech/' },
+                { name: '系统下载', url: 'https://next.itellyou.cn' },
+                { name: 'Edge浏览器下载', url: 'https://www.catalog.update.microsoft.com/Search.aspx?q=edge' },
+                { name: 'Chrome/谷歌浏览器下载', url: 'https://www.google.cn/intl/zh-CN/chrome/' },
+                { name: '驱动总裁', url: 'https://cn-sysceo.com.cn/' },
+                { name: '驱动精灵', url: 'https://www.drivergenius.com/' },
+                { name: '驱动大师', url: 'https://dm.weishi.360.cn/home.html' },
+                { name: '显卡天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/gpu/' },
+                { name: 'CPU天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/cpu/index.html' },
             ]
         }, {
             id: 'learn', name: '学习', iconClass: 'icon-learn', iconEmoji: '📚',
@@ -600,18 +611,6 @@
                 { name: '搞机助手', url: 'https://lsdy.top/gjzs' },
                 { name: '紫罗兰工具箱', url: 'https://violettool.top' },
                 { name: 'TFT刷机工具', url: 'https://tftunlocker.com' },
-            ]
-        }, {
-            id: 'pc', name: '电脑', iconClass: 'icon-pc', iconEmoji: '💻',
-            links: [
-                { name: 'NVIDIA显卡驱动', url: 'https://www.nvidia.cn/drivers/' },
-                { name: 'AMD处理器/显卡驱动', url: 'https://www.amd.com/zh-cn/support/download/drivers.html' },
-                { name: '雨糖驱动', url: 'https://raincandy.tech/' },
-                { name: '系统下载', url: 'https://next.itellyou.cn' },
-                { name: 'Edge浏览器下载', url: 'https://www.catalog.update.microsoft.com/Search.aspx?q=edge' },
-                { name: 'Chrome/谷歌浏览器下载', url: 'https://www.google.cn/intl/zh-CN/chrome/' },
-                { name: '显卡天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/gpu/' },
-                { name: 'CPU天梯图', url: 'https://www.mydrivers.com/zhuanti/tianti/cpu/index.html' },
             ]
         }, {
             id: 'game', name: '游戏', iconClass: 'icon-game', iconEmoji: '🎮',
@@ -947,7 +946,7 @@
             closeSidebar();
         }
 
-        // ★ 修改后的 renderLinks 函数，始终显示分类标签
+        // ★ 始终显示分类标签
         function renderLinks(linksOverride) {
             const grid = document.getElementById('linkGrid');
             const titleEl = document.getElementById('contentTitle');
@@ -955,7 +954,7 @@
 
             let linksToShow;
             let titleText;
-            const showCategory = true; // 始终显示分类
+            const showCategory = true;
 
             if (linksOverride) {
                 linksToShow = linksOverride;
