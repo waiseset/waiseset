@@ -173,7 +173,7 @@
         .icon-ai{background:#f3e8ff}.icon-social{background:#cffafe}
         .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}
         .icon-all{background:#e8e8ed}
-        .icon-tg{background:#fde68a}  /* TG频道新图标底色 */
+        .icon-tg{background:#fde68a}
 
         .main-content {
             flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
@@ -316,7 +316,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;               /* 鼠标指针 */
+            cursor: pointer;
         }
         .image-box img {
             max-width: 100%;
@@ -417,7 +417,7 @@
             .link-card .card-name { font-size:0.78rem; }
             .search-wrapper { max-width:100%; }
             #secretImageView {
-                padding: 60px 10px 12px 10px;   /* 增加顶部内边距，避开菜单按钮 */
+                padding: 60px 10px 12px 10px;
             }
             .secret-image-area { grid-template-columns: repeat(2, 1fr); }
             .secret-tabs button { padding: 7px 14px; font-size: 0.8rem; }
@@ -520,7 +520,7 @@
     </div>
 
     <script>
-        // 分类数据（新添加了 TG频道 分区）
+        // 分类数据
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -646,7 +646,6 @@
                 { name: 'Telegram', url: 'https://telegram.org' },
             ]
         }, {
-            // ★ 新增 TG频道 分区
             id: 'tgchannel', name: 'TG频道', iconClass: 'icon-tg', iconEmoji: '📡',
             links: [
                 { name: 'Hookvip', url: 'https://t.me/HookVipCl' },
@@ -659,7 +658,6 @@
                 { name: 'YuePanel_App', url: 'https://t.me/YuePanel_app' },
                 { name: '白嫖分享社', url: 'https://t.me/pgkj666' },
                 { name: '一元机场', url: 'https://t.me/yyjc_group' },
-                // 请将上方链接替换为您的真实频道链接
             ]
         }];
 
@@ -792,7 +790,6 @@
                         img.src = imgData.url;
                         img.alt = section.name;
                         img.loading = 'lazy';
-                        // 点击图片放大
                         img.addEventListener('click', () => openLightbox(imgData.url));
                         box.appendChild(img);
                         area.appendChild(box);
@@ -935,6 +932,7 @@
             closeSidebar();
         }
 
+        // ★ 修改后的 renderLinks 函数，始终显示分类标签
         function renderLinks(linksOverride) {
             const grid = document.getElementById('linkGrid');
             const titleEl = document.getElementById('contentTitle');
@@ -942,6 +940,7 @@
 
             let linksToShow;
             let titleText;
+            const showCategory = true; // 始终显示分类
 
             if (linksOverride) {
                 linksToShow = linksOverride;
@@ -984,9 +983,13 @@
                 card.title = link.name;
                 card.style.animationDelay = (index * 0.03) + 's';
                 const firstChar = link.name.charAt(0).toUpperCase();
+                const catLabel = showCategory && link.catName 
+                    ? `<span style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">${link.catEmoji||''} ${link.catName}</span>` 
+                    : '';
                 card.innerHTML = `
                     <span class="card-icon">${firstChar}</span>
                     <span class="card-name">${link.name}</span>
+                    ${catLabel}
                 `;
                 fragment.appendChild(card);
             });
