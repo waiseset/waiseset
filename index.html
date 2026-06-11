@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>waiseset的导航页</title>
+    <!-- 拼音库 -->
+    <script src="https://unpkg.com/pinyin-pro@3.18.2/dist/index.js"></script>
     <style>
         :root {
             --bg: #f0f2f5;
@@ -64,65 +66,28 @@
             overflow: hidden;
         }
 
-        .app-layout {
-            display: flex;
-            height: 100vh;
-            width: 100%;
-        }
+        .app-layout { display: flex; height: 100vh; width: 100%; }
 
         .sidebar {
-            width: var(--sidebar-width);
-            min-width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
-            z-index: 10;
-            padding: 24px 20px 20px;
-            gap: 16px;
-            scroll-behavior: smooth;
+            width: var(--sidebar-width); min-width: var(--sidebar-width);
+            background: var(--sidebar-bg); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+            z-index: 10; padding: 24px 20px 20px; gap: 16px; scroll-behavior: smooth;
         }
         .sidebar::-webkit-scrollbar { width: 4px; }
         .sidebar::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
         .sidebar { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) transparent; }
 
-        .sidebar-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 10px;
-        }
+        .sidebar-header { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
         .avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
+            width: 68px; height: 68px; border-radius: 50%;
             background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;
         }
-        .avatar-img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            top:0; left:0; z-index:1;
-        }
-        .avatar-text {
-            font-size: 30px; color:#fff; font-weight:600; z-index:0; user-select:none;
-        }
-        .sidebar-header h2 {
-            font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text);
-        }
-        .sidebar-header .bio {
-            font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4;
-        }
+        .avatar-img { position: absolute; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; top:0; left:0; z-index:1; }
+        .avatar-text { font-size: 30px; color:#fff; font-weight:600; z-index:0; user-select:none; }
+        .sidebar-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+        .sidebar-header .bio { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
         .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
         .tag {
             display: inline-block; background: var(--tag-bg); color: var(--tag-text);
@@ -138,18 +103,12 @@
         }
         .btn:hover { background: var(--btn-hover); transform: translateY(-1px); }
         .btn-sponsor { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
-        @media (prefers-color-scheme: dark) {
-            .btn-sponsor { background:#3b1e1e; border-color:#7f1d1d; color:#fca5a5; }
-        }
+        @media (prefers-color-scheme: dark) { .btn-sponsor { background:#3b1e1e; border-color:#7f1d1d; color:#fca5a5; } }
 
         .sidebar-divider { height: 1px; background: var(--border); margin: 4px 0; flex-shrink: 0; }
-        .sidebar-nav-label {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary);
-            padding: 0 4px; font-weight: 600;
-        }
+        .sidebar-nav-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); padding: 0 4px; font-weight: 600; }
 
         .nav-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-
         .nav-item {
             display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm);
             cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--text);
@@ -160,19 +119,13 @@
         .nav-item.active::before {
             content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
         }
-        .nav-icon {
-            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-        }
-        .nav-badge {
-            margin-left: auto; font-size: 0.72rem; color: var(--text-secondary); background: var(--btn-bg); padding: 2px 8px; border-radius: 10px; font-weight: 500;
-        }
+        .nav-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .nav-badge { margin-left: auto; font-size: 0.72rem; color: var(--text-secondary); background: var(--btn-bg); padding: 2px 8px; border-radius: 10px; font-weight: 500; }
         .nav-item.active .nav-badge { background: var(--accent); color: #fff; }
 
-        .icon-dev{background:#fef3c7}.icon-design{background:#fce7f3}
-        .icon-learn{background:#d1fae5}.icon-tool{background:#e0e7ff}
-        .icon-ai{background:#f3e8ff}.icon-social{background:#cffafe}
-        .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}
-        .icon-all{background:#e8e8ed}
+        .icon-dev{background:#fef3c7}.icon-design{background:#fce7f3}.icon-learn{background:#d1fae5}
+        .icon-tool{background:#e0e7ff}.icon-ai{background:#f3e8ff}.icon-social{background:#cffafe}
+        .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}.icon-all{background:#e8e8ed}
         .icon-tg{background:#fde68a}
 
         .main-content {
@@ -190,20 +143,15 @@
             background: var(--card-bg); color: var(--text); font-size: 0.9rem; outline: none;
             transition: box-shadow var(--transition),border-color var(--transition); box-shadow: var(--shadow-card);
         }
-        .search-input:focus {
-            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
-        }
-        .search-icon {
-            position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1rem; pointer-events: none;
-        }
-        .search-info {
-            font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; display: none;
-        }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 1rem; pointer-events: none; }
+        .search-info { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 16px; display: none; }
         .search-info.visible { display: block; }
 
         .content-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
         .link-grid {
             display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 14px; padding-bottom: 20px;
+            padding-right: 40px;
         }
         .link-card {
             background: var(--card-bg); border-radius: var(--radius); padding: 20px 16px; text-align: center;
@@ -221,6 +169,13 @@
         .link-card:hover .card-icon { background: var(--accent); color: #fff; }
         .link-card .card-name { font-size: 0.85rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
 
+        /* 高亮样式：仅改变边框和阴影，不触碰背景 */
+        .link-card.highlight {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 16px var(--accent) !important;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
         @keyframes cardFadeIn {
             from { opacity:0; transform:translateY(12px); }
             to { opacity:1; transform:translateY(0); }
@@ -229,205 +184,67 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         .empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; opacity: 0.6; }
 
-        /* 图片视图 */
-        .image-view {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-        }
-        .image-view img {
-            max-width: 90%;
-            max-height: 70vh;
-            height: auto;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-hover);
-            background: #fff;
-            padding: 10px;
-        }
+        /* 图片视图、隐藏页等 */
+        .image-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        .image-view img { max-width: 90%; max-height: 70vh; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-hover); background: #fff; padding: 10px; }
+        #secretImageView { position: absolute; top:0; left:0; right:0; bottom:0; padding:16px 20px; background:var(--bg); display:none; flex-direction:column; z-index:5; }
+        .secret-container { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+        .secret-tabs { display:flex; flex-wrap:wrap; gap:8px; padding:0 0 12px; margin-bottom:4px; justify-content:flex-start; }
+        .secret-tabs button { padding:8px 18px; background:var(--card-bg); border:1px solid var(--border); border-radius:20px; font-size:0.85rem; color:var(--text); cursor:pointer; transition:background var(--transition),color var(--transition); white-space:nowrap; }
+        .secret-tabs button:hover { background:var(--btn-hover); }
+        .secret-tabs button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+        .secret-image-area { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; padding:16px; background:var(--card-bg); border-radius:var(--radius); border:1px solid var(--border); overflow-y:auto; align-content:start; min-height:0; }
+        .image-box { aspect-ratio:4/3; overflow:hidden; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+        .image-box img { max-width:100%; max-height:100%; object-fit:contain; padding:4px; }
+        .placeholder-text { grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px; }
+        .lightbox { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:200; align-items:center; justify-content:center; flex-direction:column; }
+        .lightbox.active { display:flex; }
+        .lightbox img { max-width:95vw; max-height:90vh; object-fit:contain; background:#fff; padding:10px; border-radius:12px; }
+        .lightbox-close { position:absolute; top:20px; right:30px; font-size:36px; color:#fff; cursor:pointer; background:none; border:none; }
+        .lightbox-close:hover { color:var(--accent); }
+        .footer { text-align:center; margin-top:auto; padding-top:24px; color:var(--text-secondary); font-size:0.75rem; letter-spacing:0.02em; }
 
-        /* 隐藏图片页 */
-        #secretImageView {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 16px 20px 16px 20px;
-            background: var(--bg);
-            display: none;
-            flex-direction: column;
-            z-index: 5;
+        .sidebar-toggle { display:none; position:fixed; top:12px; left:12px; z-index:100; width:40px; height:40px; border-radius:20px; background:var(--card-bg); border:1px solid var(--border); font-size:20px; cursor:pointer; box-shadow:var(--shadow); color:var(--text); align-items:center; justify-content:center; }
+        .sidebar-overlay { display:none; position:fixed; top:0;left:0;right:0;bottom:0; background:rgba(0,0,0,0.4); z-index:9; }
+        .sidebar-overlay.active { display:block; }
+        .alphabet-bar {
+            position:fixed; right:16px; top:50%; transform:translateY(-50%);
+            display:flex; flex-direction:column; gap:2px; z-index:20;
+            background:rgba(255,255,255,0.5); backdrop-filter:blur(4px);
+            padding:6px 3px; border-radius:20px; box-shadow:0 2px 8px rgba(0,0,0,0.08);
         }
-        .secret-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        @media (prefers-color-scheme:dark) { .alphabet-bar { background:rgba(40,40,42,0.6); } }
+        .alphabet-bar button {
+            display:block; width:26px; height:26px; border:none; background:transparent;
+            color:var(--text-secondary); font-size:0.7rem; font-weight:600; cursor:pointer;
+            border-radius:50%; transition:background var(--transition),color var(--transition),opacity var(--transition);
+            text-align:center; line-height:26px; padding:0;
         }
-        .secret-tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 0 0 12px 0;
-            margin-bottom: 4px;
-            justify-content: flex-start;
-        }
-        .secret-tabs button {
-            padding: 8px 18px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: var(--text);
-            cursor: pointer;
-            transition: background var(--transition), color var(--transition);
-            white-space: nowrap;
-        }
-        .secret-tabs button:hover {
-            background: var(--btn-hover);
-        }
-        .secret-tabs button.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
-        }
+        .alphabet-bar button:hover { background:var(--accent-light); color:var(--accent); }
+        .alphabet-bar button:active { background:var(--accent); color:#fff; }
+        .alphabet-bar button.disabled { opacity:0.3; pointer-events:none; }
 
-        .secret-image-area {
-            flex: 1;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            padding: 16px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow-y: auto;
-            align-content: start;
-            min-height: 0;
-        }
-        .image-box {
-            aspect-ratio: 4 / 3;
-            overflow: hidden;
-            border-radius: 8px;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .image-box img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            padding: 4px;
-        }
-        .placeholder-text {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 40px;
-        }
-
-        /* 灯箱样式 */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .lightbox.active {
-            display: flex;
-        }
-        .lightbox img {
-            max-width: 95vw;
-            max-height: 90vh;
-            object-fit: contain;
-            background: #fff;
-            padding: 10px;
-            border-radius: 12px;
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 36px;
-            color: #fff;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        .lightbox-close:hover {
-            color: var(--accent);
-        }
-
-        .footer { text-align: center; margin-top: auto; padding-top: 24px; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.02em; }
-
-        .sidebar-toggle {
-            display: none;
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            z-index: 100;
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            color: var(--text);
-            align-items: center;
-            justify-content: center;
-        }
-        .sidebar-overlay { display: none; position: fixed; top:0;left:0;right:0;bottom:0; background: rgba(0,0,0,0.4); z-index: 9; }
-        .sidebar-overlay.active { display: block; }
-
-        @media (max-width: 768px) {
-            .app-layout { flex-direction: column; }
-            .sidebar {
-                position: fixed;
-                top:0;
-                left:-100%;
-                width:280px;
-                min-width:280px;
-                height:100vh;
-                z-index:50;
-                transition: left 0.3s ease;
-                border-right:1px solid var(--border);
-                box-shadow:4px 0 20px rgba(0,0,0,0.15);
-                padding-top:50px;
-            }
-            .sidebar.open { left:0; }
-            .sidebar-toggle { display:flex; }
+        @media (max-width:768px) {
+            .alphabet-bar { display:none; } .link-grid { padding-right:0; }
+            .app-layout { flex-direction:column; }
+            .sidebar { position:fixed; top:0; left:-100%; width:280px; min-width:280px; height:100vh; z-index:50; transition:left 0.3s ease; border-right:1px solid var(--border); box-shadow:4px 0 20px rgba(0,0,0,0.15); padding-top:50px; }
+            .sidebar.open { left:0; } .sidebar-toggle { display:flex; }
             .main-content { padding:18px 14px 30px; padding-top:56px; }
             .link-grid { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap:10px; }
             .link-card { padding:16px 10px; gap:8px; }
             .link-card .card-icon { width:40px; height:40px; font-size:18px; border-radius:10px; }
             .link-card .card-name { font-size:0.78rem; }
             .search-wrapper { max-width:100%; }
-            #secretImageView {
-                padding: 60px 10px 12px 10px;
-            }
-            .secret-image-area { grid-template-columns: repeat(2, 1fr); }
-            .secret-tabs button { padding: 7px 14px; font-size: 0.8rem; }
+            #secretImageView { padding:60px 10px 12px; }
+            .secret-image-area { grid-template-columns:repeat(2,1fr); }
+            .secret-tabs button { padding:7px 14px; font-size:0.8rem; }
         }
-        @media (max-width: 400px) {
-            .link-grid { grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
+        @media (max-width:400px) {
+            .link-grid { grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; }
             .link-card { padding:14px 8px; gap:6px; }
             .link-card .card-icon { width:36px; height:36px; font-size:16px; border-radius:10px; }
             .link-card .card-name { font-size:0.73rem; }
-            .secret-image-area { grid-template-columns: repeat(1, 1fr); }
+            .secret-image-area { grid-template-columns:repeat(1,1fr); }
         }
     </style>
 </head>
@@ -440,22 +257,14 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="avatar">
-                    <img 
-                        class="avatar-img" 
-                        src="https://r2.image-upload.app/ptImg/semnKjzz.jpg" 
-                        alt="头像"
-                        onerror="this.onerror=null;this.src='images/头像.svg';"
-                    >
+                    <img class="avatar-img" src="https://r2.image-upload.app/ptImg/semnKjzz.jpg" alt="头像" onerror="this.onerror=null;this.src='images/头像.svg';">
                     <span class="avatar-text">W</span>
                 </div>
                 <h2>waiseset</h2>
                 <p class="bio">数码爱好者 刷机爱好者 魔方爱好者 游戏爱好者</p>
                 <div class="tags">
-                    <span class="tag">电脑配置/优化</span>
-                    <span class="tag">刷机/玩机</span>
-                    <span class="tag">游戏</span>
-                    <span class="tag">Python</span>
-                    <span class="tag">魔方</span>
+                    <span class="tag">电脑配置/优化</span><span class="tag">刷机/玩机</span>
+                    <span class="tag">游戏</span><span class="tag">Python</span><span class="tag">魔方</span>
                 </div>
             </div>
             <div class="sidebar-actions">
@@ -471,56 +280,40 @@
             <div id="defaultView">
                 <div class="search-wrapper">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="searchInput" class="search-input" placeholder="在所有链接中搜索...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="输入汉字或拼音搜索（支持空格）…">
                 </div>
                 <p class="search-info" id="searchInfo"></p>
                 <div class="content-title" id="contentTitle">🗂️ 全部链接</div>
                 <div class="link-grid" id="linkGrid"></div>
             </div>
-
-            <div id="sponsorView" class="image-view" style="display: none;">
-                <img 
-                    src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" 
-                    alt="赞助二维码"
-                    onerror="this.onerror=null;this.src='images/赞助.svg';"
-                >
+            <div id="sponsorView" class="image-view" style="display:none;">
+                <img src="https://r2.image-upload.app/ptImg/LyPo7zfU.jpg" alt="赞助二维码" onerror="this.onerror=null;this.src='images/赞助.svg';">
             </div>
-
-            <div id="homeView" class="image-view" style="display: none;">
-                <img 
-                    src="https://r2.image-upload.app/tyImg/rGkx0s2d.png"
-                    alt="主页图片"
-                    onerror="this.onerror=null;this.src='images/主页.svg';"
-                >
+            <div id="homeView" class="image-view" style="display:none;">
+                <img src="https://r2.image-upload.app/tyImg/rGkx0s2d.png" alt="主页图片" onerror="this.onerror=null;this.src='images/主页.svg';">
             </div>
-
-            <!-- 隐藏图片页 -->
             <div id="secretImageView">
                 <div class="secret-container">
                     <div class="secret-tabs" id="secretTabs"></div>
-                    <div class="secret-image-area" id="secretImageArea">
-                        <p class="placeholder-text">请选择一个分区查看图片</p>
-                    </div>
+                    <div class="secret-image-area" id="secretImageArea"><p class="placeholder-text">请选择一个分区查看图片</p></div>
                 </div>
             </div>
-
-            <div id="secretLinksView" style="display: none; flex-direction: column; flex: 1; padding: 28px 32px; overflow-y: auto;">
-                <h2 style="margin-bottom: 20px;">🔮 隐藏网站</h2>
+            <div id="secretLinksView" style="display:none; flex-direction:column; flex:1; padding:28px 32px; overflow-y:auto;">
+                <h2 style="margin-bottom:20px;">🔮 隐藏网站</h2>
                 <div class="link-grid" id="secretLinkGrid"></div>
             </div>
-
             <p class="footer">© 2026 我的导航页 · 简洁即美</p>
         </main>
     </div>
 
-    <!-- 图片灯箱 -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" id="lightboxClose">&times;</button>
         <img src="" alt="查看图片" id="lightboxImg">
     </div>
+    <nav class="alphabet-bar" id="alphabetBar"></nav>
 
     <script>
-        // 分类数据（已移除电脑分类，合并至实用分类）
+        // ==================== 完整分类数据 ====================
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -754,14 +547,12 @@
             }
         ];
 
+        // ==================== 全局状态 ====================
         let currentCategoryId = 'all';
         let isSearching = false;
-
-        let homeClickCount = 0;
-        let sponsorClickCount = 0;
-        let homeClickTimer = null;
-        let sponsorClickTimer = null;
+        let homeClickCount = 0, sponsorClickCount = 0;
         const CLICK_LIMIT = 10;
+        let homeClickTimer, sponsorClickTimer;
 
         const defaultView = document.getElementById('defaultView');
         const sponsorView = document.getElementById('sponsorView');
@@ -770,358 +561,190 @@
         const secretLinksView = document.getElementById('secretLinksView');
 
         function hideAllViews() {
-            defaultView.style.display = 'none';
-            sponsorView.style.display = 'none';
-            homeView.style.display = 'none';
-            secretImageView.style.display = 'none';
-            secretLinksView.style.display = 'none';
+            defaultView.style.display = 'none'; sponsorView.style.display = 'none'; homeView.style.display = 'none';
+            secretImageView.style.display = 'none'; secretLinksView.style.display = 'none';
         }
+        function showDefaultView() { hideAllViews(); defaultView.style.display = 'block'; }
 
-        function showDefaultView() {
-            hideAllViews();
-            defaultView.style.display = 'block';
-        }
-
-        // 图片灯箱功能
-        function openLightbox(imgSrc) {
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightboxImg');
-            lightboxImg.src = imgSrc;
-            lightbox.classList.add('active');
-        }
-
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('active');
-        }
-
+        // 灯箱
+        function openLightbox(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('active'); }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
         document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-        document.getElementById('lightbox').addEventListener('click', function(e) {
-            if (e.target === this) closeLightbox();
-        });
+        document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
 
+        // 隐藏图片页渲染
         function renderSecretTabs() {
-            const tabs = document.getElementById('secretTabs');
-            tabs.innerHTML = '';
-            secretImageSections.forEach((section) => {
-                const btn = document.createElement('button');
-                btn.textContent = section.name;
+            const tabs = document.getElementById('secretTabs'); tabs.innerHTML = '';
+            secretImageSections.forEach(section => {
+                const btn = document.createElement('button'); btn.textContent = section.name;
                 btn.addEventListener('click', () => {
                     tabs.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    const area = document.getElementById('secretImageArea');
-                    area.innerHTML = '';
-                    section.images.forEach(imgData => {
-                        const box = document.createElement('div');
-                        box.className = 'image-box';
-                        const img = document.createElement('img');
-                        img.src = imgData.url;
-                        img.alt = section.name;
-                        img.loading = 'lazy';
-                        img.addEventListener('click', () => openLightbox(imgData.url));
-                        box.appendChild(img);
-                        area.appendChild(box);
+                    const area = document.getElementById('secretImageArea'); area.innerHTML = '';
+                    section.images.forEach(img => {
+                        const box = document.createElement('div'); box.className = 'image-box';
+                        const imgEl = document.createElement('img'); imgEl.src = img.url; imgEl.alt = section.name;
+                        imgEl.loading = 'lazy'; imgEl.addEventListener('click', () => openLightbox(img.url));
+                        box.appendChild(imgEl); area.appendChild(box);
                     });
                 });
                 tabs.appendChild(btn);
             });
         }
 
+        // 隐藏网站页渲染
         function renderSecretLinks() {
-            const grid = document.getElementById('secretLinkGrid');
-            grid.innerHTML = '';
-            if (secretLinks.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><p>暂无隐藏网站，请在代码中添加</p></div>';
-                return;
-            }
-            secretLinks.forEach((link, index) => {
-                const card = document.createElement('a');
-                card.className = 'link-card';
-                card.href = link.url;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.title = link.name;
-                card.style.animationDelay = (index * 0.03) + 's';
-                const firstChar = link.name.charAt(0).toUpperCase();
-                card.innerHTML = `<span class="card-icon">${firstChar}</span><span class="card-name">${link.name}</span>`;
+            const grid = document.getElementById('secretLinkGrid'); grid.innerHTML = '';
+            if (!secretLinks.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><p>暂无隐藏网站</p></div>'; return; }
+            secretLinks.forEach((link, i) => {
+                const card = document.createElement('a'); card.className = 'link-card';
+                card.href = link.url; card.target = '_blank'; card.rel = 'noopener noreferrer';
+                card.title = link.name; card.style.animationDelay = (i * 0.03) + 's';
+                card.innerHTML = `<span class="card-icon">${link.name.charAt(0).toUpperCase()}</span><span class="card-name">${link.name}</span>`;
                 grid.appendChild(card);
             });
         }
 
+        // 主页/赞助按钮（连续点击触发隐藏页）
         document.getElementById('homeBtn').addEventListener('click', () => {
-            homeClickCount++;
-            if (homeClickTimer) clearTimeout(homeClickTimer);
-            homeClickTimer = setTimeout(() => { homeClickCount = 0; }, 5000);
-
-            if (homeClickCount >= CLICK_LIMIT) {
-                homeClickCount = 0;
-                clearTimeout(homeClickTimer);
-                hideAllViews();
-                secretImageView.style.display = 'flex';
-                renderSecretTabs();
-                if (secretImageSections.length > 0) {
-                    const firstBtn = document.querySelector('#secretTabs button');
-                    if (firstBtn) firstBtn.click();
-                } else {
-                    document.getElementById('secretImageArea').innerHTML = '<p class="placeholder-text">暂无分区内容</p>';
-                }
-                return;
-            }
-
-            if (homeView.style.display === 'flex') {
-                showDefaultView();
-            } else {
-                hideAllViews();
-                homeView.style.display = 'flex';
-            }
+            homeClickCount++; clearTimeout(homeClickTimer); homeClickTimer = setTimeout(() => homeClickCount=0, 5000);
+            if (homeClickCount >= CLICK_LIMIT) { homeClickCount=0; clearTimeout(homeClickTimer); hideAllViews(); secretImageView.style.display='flex'; renderSecretTabs(); const first=document.querySelector('#secretTabs button'); if(first) first.click(); else document.getElementById('secretImageArea').innerHTML='<p class="placeholder-text">暂无分区内容</p>'; return; }
+            homeView.style.display === 'flex' ? showDefaultView() : (hideAllViews(), homeView.style.display = 'flex');
         });
-
         document.getElementById('sponsorBtn').addEventListener('click', () => {
-            sponsorClickCount++;
-            if (sponsorClickTimer) clearTimeout(sponsorClickTimer);
-            sponsorClickTimer = setTimeout(() => { sponsorClickCount = 0; }, 5000);
-
-            if (sponsorClickCount >= CLICK_LIMIT) {
-                sponsorClickCount = 0;
-                clearTimeout(sponsorClickTimer);
-                hideAllViews();
-                secretLinksView.style.display = 'flex';
-                renderSecretLinks();
-                return;
-            }
-
-            if (sponsorView.style.display === 'flex') {
-                showDefaultView();
-            } else {
-                hideAllViews();
-                sponsorView.style.display = 'flex';
-            }
+            sponsorClickCount++; clearTimeout(sponsorClickTimer); sponsorClickTimer = setTimeout(() => sponsorClickCount=0, 5000);
+            if (sponsorClickCount >= CLICK_LIMIT) { sponsorClickCount=0; clearTimeout(sponsorClickTimer); hideAllViews(); secretLinksView.style.display='flex'; renderSecretLinks(); return; }
+            sponsorView.style.display === 'flex' ? showDefaultView() : (hideAllViews(), sponsorView.style.display = 'flex');
         });
 
+        // 左侧导航渲染
         function renderNav() {
-            const navList = document.getElementById('navList');
-            navList.innerHTML = '';
-
-            const allItem = document.createElement('li');
-            allItem.className = 'nav-item';
-            allItem.dataset.catId = 'all';
-            allItem.innerHTML = `
-                <span class="nav-icon icon-all">🗂️</span>
-                <span>全部链接</span>
-                <span class="nav-badge">${categories.reduce((sum,c)=>sum+c.links.length,0)}</span>
-            `;
-            allItem.addEventListener('click', () => selectCategory('all'));
-            navList.appendChild(allItem);
-
+            const nav = document.getElementById('navList'); nav.innerHTML = '';
+            const allItem = document.createElement('li'); allItem.className = 'nav-item'; allItem.dataset.catId = 'all';
+            allItem.innerHTML = `<span class="nav-icon icon-all">🗂️</span><span>全部链接</span><span class="nav-badge">${categories.reduce((s,c)=>s+c.links.length,0)}</span>`;
+            allItem.addEventListener('click', () => selectCategory('all')); nav.appendChild(allItem);
             categories.forEach(cat => {
-                const item = document.createElement('li');
-                item.className = 'nav-item';
-                item.dataset.catId = cat.id;
-                item.innerHTML = `
-                    <span class="nav-icon ${cat.iconClass}">${cat.iconEmoji}</span>
-                    <span>${cat.name}</span>
-                    <span class="nav-badge">${cat.links.length}</span>
-                `;
-                item.addEventListener('click', () => selectCategory(cat.id));
-                navList.appendChild(item);
+                const item = document.createElement('li'); item.className = 'nav-item'; item.dataset.catId = cat.id;
+                item.innerHTML = `<span class="nav-icon ${cat.iconClass}">${cat.iconEmoji}</span><span>${cat.name}</span><span class="nav-badge">${cat.links.length}</span>`;
+                item.addEventListener('click', () => selectCategory(cat.id)); nav.appendChild(item);
             });
-
             updateNavActive();
         }
-
         function updateNavActive() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.catId === currentCategoryId);
-            });
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.catId === currentCategoryId));
         }
-
         function updateSearchPlaceholder() {
             const input = document.getElementById('searchInput');
-            if (currentCategoryId === 'all') {
-                input.placeholder = '在所有链接中搜索...';
-            } else {
-                const cat = categories.find(c => c.id === currentCategoryId);
-                if (cat) {
-                    input.placeholder = `在 ${cat.name} 分类中搜索...`;
-                }
-            }
+            if (currentCategoryId === 'all') input.placeholder = '输入汉字或拼音搜索（支持空格）…';
+            else { const cat = categories.find(c => c.id === currentCategoryId); if (cat) input.placeholder = `在 ${cat.name} 中搜索…`; }
         }
-
         function selectCategory(catId) {
-            currentCategoryId = catId;
-            isSearching = false;
-            const input = document.getElementById('searchInput');
-            input.value = '';
+            currentCategoryId = catId; isSearching = false;
+            document.getElementById('searchInput').value = '';
             document.getElementById('searchInfo').classList.remove('visible');
-            updateSearchPlaceholder();
-            updateNavActive();
-            showDefaultView();
-            renderLinks();
+            updateSearchPlaceholder(); updateNavActive(); showDefaultView(); renderLinks();
             closeSidebar();
         }
 
-        // ★ 始终显示分类标签
+        // 拼音工具
+        function getPinyinInfo(name) {
+            if (typeof pinyinPro === 'undefined') { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; }
+            try { const full = pinyinPro.pinyin(name,{pattern:'normal',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); const first = pinyinPro.pinyin(name,{pattern:'first',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); return {full, first}; }
+            catch(e) { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; }
+        }
+        function matchesQuery(link, rawQuery) {
+            if (!rawQuery) return true;
+            const lowerName = link.name.toLowerCase(); const pinyin = getPinyinInfo(link.name);
+            const words = rawQuery.split(/\s+/).filter(w => w.length);
+            return words.every(word => lowerName.includes(word) || pinyin.full.includes(word) || pinyin.first.includes(word));
+        }
+
+        // 更新字母栏可用状态
+        function updateAlphabetBarState() {
+            const existing = new Set();
+            document.querySelectorAll('.link-card[data-pinyin-first]').forEach(card => {
+                const ch = card.getAttribute('data-pinyin-first'); if (ch) existing.add(ch);
+            });
+            document.querySelectorAll('.alphabet-bar button').forEach(btn => {
+                const letter = btn.textContent.toLowerCase();
+                btn.classList.toggle('disabled', !existing.has(letter));
+            });
+        }
+
+        // 渲染卡片（添加拼音首字母属性）
         function renderLinks(linksOverride) {
-            const grid = document.getElementById('linkGrid');
-            const titleEl = document.getElementById('contentTitle');
-            grid.innerHTML = '';
-
-            let linksToShow;
-            let titleText;
-            const showCategory = true;
-
-            if (linksOverride) {
-                linksToShow = linksOverride;
-                titleText = `🔍 搜索结果 (${linksToShow.length})`;
-            } else if (currentCategoryId === 'all') {
-                linksToShow = [];
-                categories.forEach(cat => {
-                    cat.links.forEach(link => linksToShow.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji }));
-                });
-                titleText = `🗂️ 全部链接 (${linksToShow.length})`;
-            } else {
-                const cat = categories.find(c => c.id === currentCategoryId);
-                if (cat) {
-                    linksToShow = cat.links.map(l => ({ ...l, catName: cat.name, catEmoji: cat.iconEmoji }));
-                    titleText = `${cat.iconEmoji} ${cat.name}`;
-                } else {
-                    linksToShow = [];
-                    titleText = '';
-                }
-            }
-
+            const grid = document.getElementById('linkGrid'); const titleEl = document.getElementById('contentTitle'); grid.innerHTML = '';
+            let linksToShow, titleText; const showCategory = true;
+            if (linksOverride) { linksToShow = linksOverride; titleText = `🔍 搜索结果 (${linksToShow.length})`; }
+            else if (currentCategoryId === 'all') { linksToShow = []; categories.forEach(cat => cat.links.forEach(link => linksToShow.push({...link, catName:cat.name, catEmoji:cat.iconEmoji}))); linksToShow.sort((a,b)=>a.name.localeCompare(b.name,'zh')); titleText = `🗂️ 全部链接 (${linksToShow.length})`; }
+            else { const cat = categories.find(c => c.id === currentCategoryId); if (cat) { linksToShow = cat.links.map(l => ({...l, catName:cat.name, catEmoji:cat.iconEmoji})); linksToShow.sort((a,b)=>a.name.localeCompare(b.name,'zh')); titleText = `${cat.iconEmoji} ${cat.name}`; } else { linksToShow = []; titleText = ''; } }
             titleEl.textContent = titleText;
-
-            if (linksToShow.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;">
-                        <div class="empty-icon">📭</div>
-                        <p>没有找到匹配的链接</p>
-                    </div>`;
-                return;
-            }
-
+            if (!linksToShow.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>没有找到匹配的链接</p></div>'; updateAlphabetBarState(); return; }
             const fragment = document.createDocumentFragment();
             linksToShow.forEach((link, index) => {
-                const card = document.createElement('a');
-                card.className = 'link-card';
-                card.href = link.url;
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
-                card.title = link.name;
-                card.style.animationDelay = (index * 0.03) + 's';
+                const card = document.createElement('a'); card.className = 'link-card';
+                card.href = link.url; card.target = '_blank'; card.rel = 'noopener noreferrer';
+                card.title = link.name; card.style.animationDelay = (index * 0.03) + 's';
                 const firstChar = link.name.charAt(0).toUpperCase();
-                const catLabel = showCategory && link.catName 
-                    ? `<span style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">${link.catEmoji||''} ${link.catName}</span>` 
-                    : '';
-                card.innerHTML = `
-                    <span class="card-icon">${firstChar}</span>
-                    <span class="card-name">${link.name}</span>
-                    ${catLabel}
-                `;
+                const pinyin = getPinyinInfo(link.name); const pinyinFirst = pinyin.first.charAt(0) || firstChar.toLowerCase();
+                card.setAttribute('data-pinyin-first', pinyinFirst);
+                const catLabel = showCategory && link.catName ? `<span style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">${link.catEmoji||''} ${link.catName}</span>` : '';
+                card.innerHTML = `<span class="card-icon">${firstChar}</span><span class="card-name">${link.name}</span>${catLabel}`;
                 fragment.appendChild(card);
             });
             grid.appendChild(fragment);
+            updateAlphabetBarState();
         }
 
+        // 搜索
         function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            const searchInfo = document.getElementById('searchInfo');
-
+            const searchInput = document.getElementById('searchInput'); const searchInfo = document.getElementById('searchInfo');
             searchInput.addEventListener('input', function() {
-                if (defaultView.style.display === 'none') {
-                    showDefaultView();
-                }
-                const query = this.value.trim().toLowerCase();
-                if (query === '') {
-                    isSearching = false;
-                    searchInfo.classList.remove('visible');
-                    updateNavActive();
-                    updateSearchPlaceholder();
-                    renderLinks();
-                    return;
-                }
-
-                if (query.startsWith('http://') || query.startsWith('https://')) {
-                    searchInfo.classList.add('visible');
-                    searchInfo.textContent = '按回车键直接打开该网址';
-                    return;
-                }
-
-                isSearching = true;
-                let results = [];
-
-                if (currentCategoryId === 'all') {
-                    categories.forEach(cat => {
-                        cat.links.forEach(link => {
-                            if (link.name.toLowerCase().includes(query)) {
-                                results.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji });
-                            }
-                        });
-                    });
-                } else {
-                    const cat = categories.find(c => c.id === currentCategoryId);
-                    if (cat) {
-                        cat.links.forEach(link => {
-                            if (link.name.toLowerCase().includes(query)) {
-                                results.push({ ...link, catName: cat.name, catEmoji: cat.iconEmoji });
-                            }
-                        });
-                    }
-                }
-
-                searchInfo.classList.add('visible');
-                searchInfo.textContent = `在当前分类中找到 ${results.length} 个结果`;
+                if (defaultView.style.display === 'none') showDefaultView();
+                const rawQuery = this.value.trim();
+                if (!rawQuery) { isSearching = false; searchInfo.classList.remove('visible'); updateNavActive(); updateSearchPlaceholder(); renderLinks(); return; }
+                if (rawQuery.startsWith('http://') || rawQuery.startsWith('https://')) { searchInfo.classList.add('visible'); searchInfo.textContent = '按回车键直接打开该网址'; return; }
+                isSearching = true; const query = rawQuery.toLowerCase(); let results = [];
+                if (currentCategoryId === 'all') { categories.forEach((cat, ci) => cat.links.forEach(link => { if (matchesQuery(link, query)) results.push({...link, catName:cat.name, catEmoji:cat.iconEmoji, catIndex:ci}); })); }
+                else { const cat = categories.find(c => c.id === currentCategoryId); if (cat) { const ci = categories.indexOf(cat); cat.links.forEach(link => { if (matchesQuery(link, query)) results.push({...link, catName:cat.name, catEmoji:cat.iconEmoji, catIndex:ci}); }); } }
+                results.sort((a,b) => a.catIndex !== b.catIndex ? a.catIndex - b.catIndex : a.name.localeCompare(b.name,'zh'));
+                searchInfo.classList.add('visible'); searchInfo.textContent = `找到 ${results.length} 个结果`;
                 document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                 renderLinks(results);
             });
-
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    const value = this.value.trim();
-                    if (value.startsWith('http://') || value.startsWith('https://')) {
-                        e.preventDefault();
-                        window.open(value, '_blank');
-                        this.value = '';
-                        selectCategory(currentCategoryId);
-                    }
-                }
-            });
+            searchInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { const value = this.value.trim(); if (value.startsWith('http://')||value.startsWith('https://')) { e.preventDefault(); window.open(value,'_blank'); this.value=''; selectCategory(currentCategoryId); } } });
         }
 
+        // 字母栏（全新的高亮逻辑）
+        function initAlphabetBar() {
+            const bar = document.getElementById('alphabetBar'); const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); bar.innerHTML = '';
+            letters.forEach(letter => {
+                const btn = document.createElement('button'); btn.textContent = letter;
+                btn.addEventListener('click', () => {
+                    const target = document.querySelector(`.link-card[data-pinyin-first="${letter.toLowerCase()}"]`);
+                    if (!target || target.classList.contains('disabled')) return;
+                    document.querySelectorAll('.link-card.highlight').forEach(c => c.classList.remove('highlight'));
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    target.classList.add('highlight');
+                    setTimeout(() => target.classList.remove('highlight'), 800);
+                });
+                bar.appendChild(btn);
+            });
+            updateAlphabetBarState();
+        }
+
+        // 移动端侧栏
         function setupMobile() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-
-            toggleBtn.addEventListener('click', () => {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-                toggleBtn.style.display = 'none';
-            });
-
+            const sidebar = document.getElementById('sidebar'); const toggleBtn = document.getElementById('sidebarToggle'); const overlay = document.getElementById('sidebarOverlay');
+            toggleBtn.addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('active'); toggleBtn.style.display = 'none'; });
             overlay.addEventListener('click', closeSidebar);
-            document.getElementById('mainContent').addEventListener('click', function(e) {
-                if (sidebar.classList.contains('open') && !e.target.closest('.sidebar-toggle')) {
-                    closeSidebar();
-                }
-            });
+            document.getElementById('mainContent').addEventListener('click', e => { if (sidebar.classList.contains('open') && !e.target.closest('.sidebar-toggle')) closeSidebar(); });
         }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); document.getElementById('sidebarToggle').style.display = ''; }
 
-        function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-            toggleBtn.style.display = '';
-        }
-
+        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            renderNav();
-            updateSearchPlaceholder();
-            renderLinks();
-            setupSearch();
-            setupMobile();
+            initAlphabetBar(); renderNav(); updateSearchPlaceholder(); renderLinks(); setupSearch(); setupMobile();
         });
     </script>
 </body>
