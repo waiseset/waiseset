@@ -173,6 +173,7 @@
         .icon-ai{background:#f3e8ff}.icon-social{background:#cffafe}
         .icon-game{background:#fed7aa}.icon-pc{background:#dbeafe}
         .icon-all{background:#e8e8ed}
+        .icon-tg{background:#fde68a}  /* TG频道新图标底色 */
 
         .main-content {
             flex: 1; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
@@ -519,7 +520,7 @@
     </div>
 
     <script>
-        // 分类数据
+        // 分类数据（新添加了 TG频道 分区）
         const categories = [{
             id: 'dev', name: 'AI', iconClass: 'icon-dev', iconEmoji: '🤖',
             links: [
@@ -643,6 +644,22 @@
                 { name: 'TikTok', url: 'https://www.tiktokbuzz.com' },
                 { name: 'X (Twitter)', url: 'https://x.com' },
                 { name: 'Telegram', url: 'https://telegram.org' },
+            ]
+        }, {
+            // ★ 新增 TG频道 分区
+            id: 'tgchannel', name: 'TG频道', iconClass: 'icon-tg', iconEmoji: '📡',
+            links: [
+                { name: 'Hookvip', url: 'https://t.me/HookVipCl' },
+                { name: 'WinHook Chat', url: 'https://t.me/WinHook_Chat' },
+                { name: 'OAuxiliary', url: 'https://t.me/OAuxiliary' },
+                { name: 'TurritTips', url: 'https://t.me/TurritTips' },
+                { name: 'AyuGram', url: 'https://t.me/ayugram' },
+                { name: 'exteraGram', url: 'https://t.me/exteraGram' },
+                { name: 'TFT Unlock Tool Official', url: 'https://t.me/tftunlocker' },
+                { name: 'YuePanel_App', url: 'https://t.me/YuePanel_app' },
+                { name: '白嫖分享社', url: 'https://t.me/pgkj666' },
+                { name: '一元机场', url: 'https://t.me/yyjc_group' },
+                // 请将上方链接替换为您的真实频道链接
             ]
         }];
 
