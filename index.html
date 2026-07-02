@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- 网页图标改为 .png -->
     <link rel="icon" type="image/png" href="images/网页图标.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>waiseset的导航页</title>
-    <!-- 拼音库 -->
     <script src="https://unpkg.com/pinyin-pro@3.18.2/dist/index.js"></script>
     <style>
         :root {
@@ -208,38 +206,76 @@
 
         .image-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
         .image-view img { max-width: 90%; max-height: 70vh; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-hover); background: #fff; padding: 10px; }
-        #secretImageView { position: absolute; top:0; left:0; right:0; bottom:0; padding:16px 20px; background:var(--bg); display:none; flex-direction:column; z-index:5; }
-        .secret-container { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-        .secret-tabs { display:flex; flex-wrap:wrap; gap:8px; padding:0 0 12px; margin-bottom:4px; justify-content:flex-start; }
-        .secret-tabs button { padding:8px 18px; background:var(--card-bg); border:1px solid var(--border); border-radius:20px; font-size:0.85rem; color:var(--text); cursor:pointer; transition:background var(--transition),color var(--transition); white-space:nowrap; }
+
+        /* 隐藏图片页 */
+        #secretImageView {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            padding:16px 20px; background:var(--bg); display:none; flex-direction:column; z-index:5;
+        }
+        .secret-container {
+            flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0;
+        }
+        .secret-tabs {
+            display:flex; flex-wrap:wrap; gap:8px; padding:0 0 12px; margin-bottom:4px;
+            justify-content:flex-start; flex-shrink:0;
+        }
+        .secret-tabs button {
+            padding:8px 18px; background:var(--card-bg); border:1px solid var(--border);
+            border-radius:20px; font-size:0.85rem; color:var(--text); cursor:pointer;
+            transition:background var(--transition),color var(--transition); white-space:nowrap;
+        }
         .secret-tabs button:hover { background:var(--btn-hover); }
         .secret-tabs button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
         .secret-image-area {
-            flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; padding:16px;
-            background:var(--card-bg); border-radius:var(--radius); border:1px solid var(--border);
-            overflow-y:auto; align-content:start; min-height:0;
+            flex:1;
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:16px;
+            padding:16px;
+            background:var(--card-bg);
+            border-radius:var(--radius);
+            border:1px solid var(--border);
+            overflow-y:auto;
+            align-content:start;
+            min-height:0;
         }
+        /* ★ 改用 padding-bottom 强制保持 4:3，彻底防止重叠 */
         .image-box {
-            aspect-ratio: 4 / 3;
+            width: 100%;
+            height: 0;
+            padding-bottom: 75%; /* 4:3 比例 */
+            position: relative;
             overflow: hidden;
             border-radius: 8px;
             background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
         }
         .image-box img {
-            max-width: 100%;
-            max-height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
             padding: 4px;
         }
-        .placeholder-text { grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px; }
-        .lightbox { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:200; align-items:center; justify-content:center; flex-direction:column; }
+        .placeholder-text {
+            grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px;
+        }
+        .lightbox {
+            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.9); z-index:200; align-items:center;
+            justify-content:center; flex-direction:column;
+        }
         .lightbox.active { display:flex; }
-        .lightbox img { max-width:95vw; max-height:90vh; object-fit:contain; background:#fff; padding:10px; border-radius:12px; }
-        .lightbox-close { position:absolute; top:20px; right:30px; font-size:36px; color:#fff; cursor:pointer; background:none; border:none; }
+        .lightbox img {
+            max-width:95vw; max-height:90vh; object-fit:contain;
+            background:#fff; padding:10px; border-radius:12px;
+        }
+        .lightbox-close {
+            position:absolute; top:20px; right:30px; font-size:36px;
+            color:#fff; cursor:pointer; background:none; border:none;
+        }
         .lightbox-close:hover { color:var(--accent); }
         .footer { text-align:center; margin-top:auto; padding-top:24px; color:var(--text-secondary); font-size:0.75rem; letter-spacing:0.02em; }
 
@@ -296,7 +332,6 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="avatar">
-                    <!-- ★ 修改：头像改为 images/头像.jpg -->
                     <img class="avatar-img" src="images/头像.jpg" alt="头像"
                          onload="this.style.display='';this.nextElementSibling.style.display='none';"
                          onerror="this.style.display='none';this.nextElementSibling.style.display='';">
@@ -328,13 +363,11 @@
                 <div class="content-title" id="contentTitle">🗂️ 全部链接</div>
                 <div class="link-grid" id="linkGrid"></div>
             </div>
-            <!-- ★ 赞助图片改为 images/赞助.jpg -->
             <div id="sponsorView" class="image-view" style="display:none;">
                 <img src="images/赞助.jpg" alt="赞助二维码"
                      onload="this.style.display='';"
                      onerror="this.style.display='none';">
             </div>
-            <!-- ★ 主页图片改为 images/主页.png -->
             <div id="homeView" class="image-view" style="display:none;">
                 <img src="images/主页.png" alt="主页图片"
                      onload="this.style.display='';"
