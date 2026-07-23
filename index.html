@@ -85,17 +85,10 @@
             overflow: hidden;
         }
         .avatar-img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            top:0; left:0;
-            z-index: 1;
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            object-fit: cover; top:0; left:0; z-index: 1;
         }
-        .avatar-text {
-            font-size: 30px; color:#fff; font-weight:600; z-index:0; user-select:none;
-        }
+        .avatar-text { font-size: 30px; color:#fff; font-weight:600; z-index:0; user-select:none; }
         .sidebar-header h2 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
         .sidebar-header .bio { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.4; }
         .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
@@ -163,32 +156,84 @@
             display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 14px; padding-bottom: 20px;
             padding-right: 40px;
         }
+
+        /* 通用卡片样式 */
         .link-card {
             background: var(--card-bg); border-radius: var(--radius); padding: 20px 16px; text-align: center;
             text-decoration: none; color: var(--text); box-shadow: var(--shadow-card); border: 1px solid var(--border);
             transition: box-shadow var(--transition),transform var(--transition),border-color var(--transition);
-            display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 10px; cursor: pointer;
             opacity: 0; animation: cardFadeIn 0.35s ease-out forwards;
             position: relative;
+            min-height: 120px;
         }
         .link-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); border-color: var(--accent); }
+
         .link-card .card-icon {
             width: 48px; height: 48px; border-radius: 14px; background: #e8e8ed;
             display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;
             color: #555; flex-shrink: 0; transition: background var(--transition),color var(--transition);
         }
-        .link-card:hover .card-icon { background: var(--accent); color: #fff; }
         .link-card .card-name { font-size: 0.85rem; font-weight: 500; line-height: 1.3; word-break: break-word; }
+        .card-cat { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+
+        /* 桌面端交互按钮（悬停显示） */
+        .desktop .card-actions {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .desktop .link-card:hover .card-actions {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .desktop .link-card:hover .card-icon,
+        .desktop .link-card:hover .card-name,
+        .desktop .link-card:hover .card-cat {
+            display: none;
+        }
+
+        .go-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 18px;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background var(--transition), transform 0.2s;
+            border: none;
+            cursor: pointer;
+            width: fit-content;
+        }
+        .go-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
 
         .copy-btn {
-            position: absolute; top: 6px; right: 8px;
-            background: none; border: none;
-            color: var(--text-secondary); font-size: 1rem;
-            cursor: pointer; opacity: 0.5;
-            transition: opacity 0.2s, color 0.2s; z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 10px;
+            background: var(--btn-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition), transform 0.2s;
+            width: fit-content;
         }
-        .copy-btn:hover { opacity: 1; color: var(--accent); }
-        .copy-btn.copied { opacity: 1; color: #22c55e; }
+        .copy-btn:hover { background: var(--btn-hover); color: var(--accent); transform: scale(1.05); }
+        .copy-btn.copied { color: #22c55e; }
 
         .link-card.highlight {
             border-color: var(--accent) !important;
@@ -207,18 +252,12 @@
         .image-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
         .image-view img { max-width: 90%; max-height: 70vh; height: auto; border-radius: var(--radius); box-shadow: var(--shadow-hover); background: #fff; padding: 10px; }
 
-        /* 隐藏图片页 */
         #secretImageView {
             position: absolute; top:0; left:0; right:0; bottom:0;
             padding:16px 20px; background:var(--bg); display:none; flex-direction:column; z-index:5;
         }
-        .secret-container {
-            flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0;
-        }
-        .secret-tabs {
-            display:flex; flex-wrap:wrap; gap:8px; padding:0 0 12px; margin-bottom:4px;
-            justify-content:flex-start; flex-shrink:0;
-        }
+        .secret-container { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; }
+        .secret-tabs { display:flex; flex-wrap:wrap; gap:8px; padding:0 0 12px; margin-bottom:4px; justify-content:flex-start; flex-shrink:0; }
         .secret-tabs button {
             padding:8px 18px; background:var(--card-bg); border:1px solid var(--border);
             border-radius:20px; font-size:0.85rem; color:var(--text); cursor:pointer;
@@ -227,55 +266,17 @@
         .secret-tabs button:hover { background:var(--btn-hover); }
         .secret-tabs button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
         .secret-image-area {
-            flex:1;
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:16px;
-            padding:16px;
-            background:var(--card-bg);
-            border-radius:var(--radius);
-            border:1px solid var(--border);
-            overflow-y:auto;
-            align-content:start;
-            min-height:0;
+            flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:16px; padding:16px;
+            background:var(--card-bg); border-radius:var(--radius); border:1px solid var(--border);
+            overflow-y:auto; align-content:start; min-height:0;
         }
-        /* ★ 改用 padding-bottom 强制保持 4:3，彻底防止重叠 */
-        .image-box {
-            width: 100%;
-            height: 0;
-            padding-bottom: 75%; /* 4:3 比例 */
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            background: #fff;
-            cursor: pointer;
-        }
-        .image-box img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 4px;
-        }
-        .placeholder-text {
-            grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px;
-        }
-        .lightbox {
-            display:none; position:fixed; top:0; left:0; right:0; bottom:0;
-            background:rgba(0,0,0,0.9); z-index:200; align-items:center;
-            justify-content:center; flex-direction:column;
-        }
+        .image-box { width:100%; height:0; padding-bottom:75%; position:relative; overflow:hidden; border-radius:8px; background:#fff; cursor:pointer; }
+        .image-box img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:contain; padding:4px; }
+        .placeholder-text { grid-column:1/-1; text-align:center; color:var(--text-secondary); padding:40px; }
+        .lightbox { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:200; align-items:center; justify-content:center; flex-direction:column; }
         .lightbox.active { display:flex; }
-        .lightbox img {
-            max-width:95vw; max-height:90vh; object-fit:contain;
-            background:#fff; padding:10px; border-radius:12px;
-        }
-        .lightbox-close {
-            position:absolute; top:20px; right:30px; font-size:36px;
-            color:#fff; cursor:pointer; background:none; border:none;
-        }
+        .lightbox img { max-width:95vw; max-height:90vh; object-fit:contain; background:#fff; padding:10px; border-radius:12px; }
+        .lightbox-close { position:absolute; top:20px; right:30px; font-size:36px; color:#fff; cursor:pointer; background:none; border:none; }
         .lightbox-close:hover { color:var(--accent); }
         .footer { text-align:center; margin-top:auto; padding-top:24px; color:var(--text-secondary); font-size:0.75rem; letter-spacing:0.02em; }
 
@@ -299,6 +300,7 @@
         .alphabet-bar button:active { background:var(--accent); color:#fff; }
         .alphabet-bar button.disabled { opacity:0.3; pointer-events:none; }
 
+        /* 移动端恢复原始卡片样式 */
         @media (max-width:768px) {
             .alphabet-bar { display:none; } .link-grid { padding-right:0; }
             .app-layout { flex-direction:column; }
@@ -306,9 +308,33 @@
             .sidebar.open { left:0; } .sidebar-toggle { display:flex; }
             .main-content { padding:18px 14px 30px; padding-top:56px; }
             .link-grid { grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap:10px; }
-            .link-card { padding:16px 10px; gap:8px; }
+
+            .link-card {
+                padding: 16px 10px; gap: 8px; min-height: auto;
+                cursor: pointer;
+            }
             .link-card .card-icon { width:40px; height:40px; font-size:18px; border-radius:10px; }
             .link-card .card-name { font-size:0.78rem; }
+
+            /* 移动端悬停图标变色，信息保持显示 */
+            .link-card:hover .card-icon { background: var(--accent); color: #fff; }
+            .link-card:hover .card-icon,
+            .link-card:hover .card-name,
+            .link-card:hover .card-cat { display: flex; }
+
+            /* 隐藏桌面端的交互按钮容器 */
+            .card-actions { display: none !important; }
+
+            /* 移动端复制按钮样式（右上角小图标） */
+            .copy-btn {
+                position: absolute; top: 6px; right: 8px;
+                background: none; border: none;
+                color: var(--text-secondary); font-size: 1rem;
+                opacity: 0.5; padding: 0; width: auto; height: auto; border-radius: 0;
+            }
+            .copy-btn:hover { opacity: 1; color: var(--accent); background: none; }
+            .copy-btn.copied { opacity: 1; color: #22c55e; }
+
             .search-wrapper { max-width:100%; }
             #secretImageView { padding:60px 10px 12px; }
             .secret-image-area { grid-template-columns:repeat(2,1fr); }
@@ -324,7 +350,6 @@
     </style>
 </head>
 <body>
-
     <button class="sidebar-toggle" id="sidebarToggle" aria-label="菜单">☰</button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -665,7 +690,6 @@
             ]
         }];
 
-        // 隐藏网站数据
         const secretLinks = [
             { name: 'Pixiv(P站)', url: 'https://www.pixiv.net/' },
             { name: 'EhViewer(E站)', url: 'https://github.com/liseita/Ehviewer' },
@@ -676,79 +700,14 @@
             { name: '神秘电影', url: 'https://sm087.vip/' },
         ];
 
-        // 隐藏图片分区数据
         const secretImageSections = [
-            {
-                name: '蛤蟆',
-                images: [
-                    { url: 'images/Character/蛤蟆/蛤蟆1.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆2.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆3.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆4.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆5.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆6.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆7.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆8.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆9.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆10.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆11.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆12.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆13.jpg' },
-                    { url: 'images/Character/蛤蟆/蛤蟆14.jpg' },
-                ]
-            },
-            {
-                name: '河马',
-                images: [
-                    { url: 'images/Character/河马/河马1.gif' },
-                    { url: 'images/Character/河马/河马2.jpg' },
-                    { url: 'images/Character/河马/河马3.jpg' },
-                ]
-            },
-            {
-                name: '豆豆',
-                images: [
-                    { url: 'images/Character/豆豆/豆豆1.jpg' },
-                    { url: 'images/Character/豆豆/豆豆2.jpg' },
-                ]
-            },
-            {
-                name: '睾丸',
-                images: [
-                    { url: 'images/Character/睾丸/睾丸1.jpg' },
-                ]
-            },
-            {
-                name: '壮壮',
-                images: [
-                    { url: 'images/Character/壮壮/壮壮1.jpg' },
-                    { url: 'images/Character/壮壮/壮壮2.jpg' },
-                    { url: 'images/Character/壮壮/壮壮3.jpg' },
-                    { url: 'images/Character/壮壮/壮壮4.jpg' },
-                    { url: 'images/Character/壮壮/壮壮5.jpg' },
-                    { url: 'images/Character/壮壮/壮壮6.jpg' },
-                    { url: 'images/Character/壮壮/壮壮7.jpg' },
-                    { url: 'images/Character/壮壮/壮壮8.jpg' },
-                ]
-            },
-            {
-                name: '巧克力',
-                images: [
-                    { url: 'images/Character/巧克力/巧克力1.jpg' },
-                    { url: 'images/Character/巧克力/巧克力2.jpg' },
-                    { url: 'images/Character/巧克力/巧克力3.jpg' },
-                    { url: 'images/Character/巧克力/巧克力4.jpg' },
-                    { url: 'images/Character/巧克力/巧克力5.jpg' },
-                    { url: 'images/Character/巧克力/巧克力6.jpg' },
-                    { url: 'images/Character/巧克力/巧克力7.jpg' },
-                ]
-            },
-            {
-                name: '老金',
-                images: [
-                    { url: 'images/Character/老金/老金1.jpg' },
-                ]
-            }
+            { name: '蛤蟆', images: [{ url: 'images/Character/蛤蟆/蛤蟆1.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆2.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆3.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆4.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆5.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆6.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆7.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆8.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆9.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆10.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆11.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆12.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆13.jpg' }, { url: 'images/Character/蛤蟆/蛤蟆14.jpg' }] },
+            { name: '河马', images: [{ url: 'images/Character/河马/河马1.gif' }, { url: 'images/Character/河马/河马2.jpg' }, { url: 'images/Character/河马/河马3.jpg' }] },
+            { name: '豆豆', images: [{ url: 'images/Character/豆豆/豆豆1.jpg' }, { url: 'images/Character/豆豆/豆豆2.jpg' }] },
+            { name: '睾丸', images: [{ url: 'images/Character/睾丸/睾丸1.jpg' }] },
+            { name: '壮壮', images: [{ url: 'images/Character/壮壮/壮壮1.jpg' }, { url: 'images/Character/壮壮/壮壮2.jpg' }, { url: 'images/Character/壮壮/壮壮3.jpg' }, { url: 'images/Character/壮壮/壮壮4.jpg' }, { url: 'images/Character/壮壮/壮壮5.jpg' }, { url: 'images/Character/壮壮/壮壮6.jpg' }, { url: 'images/Character/壮壮/壮壮7.jpg' }, { url: 'images/Character/壮壮/壮壮8.jpg' }] },
+            { name: '巧克力', images: [{ url: 'images/Character/巧克力/巧克力1.jpg' }, { url: 'images/Character/巧克力/巧克力2.jpg' }, { url: 'images/Character/巧克力/巧克力3.jpg' }, { url: 'images/Character/巧克力/巧克力4.jpg' }, { url: 'images/Character/巧克力/巧克力5.jpg' }, { url: 'images/Character/巧克力/巧克力6.jpg' }, { url: 'images/Character/巧克力/巧克力7.jpg' }] },
+            { name: '老金', images: [{ url: 'images/Character/老金/老金1.jpg' }] }
         ];
 
         // ==================== 全局状态 ====================
@@ -770,13 +729,11 @@
         }
         function showDefaultView() { hideAllViews(); defaultView.style.display = 'block'; }
 
-        // 灯箱
         function openLightbox(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('active'); }
         function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
         document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
         document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
 
-        // 隐藏图片页渲染
         function renderSecretTabs() {
             const tabs = document.getElementById('secretTabs'); tabs.innerHTML = '';
             secretImageSections.forEach(section => {
@@ -796,22 +753,64 @@
             });
         }
 
-        // 隐藏网站页渲染（含复制按钮）
+        // 判断设备类型
+        function isMobile() { return window.innerWidth <= 768; }
+
+        // 创建卡片
+        function createCard(link, index, showCategory) {
+            const mobile = isMobile();
+            const firstChar = link.name.charAt(0).toUpperCase();
+            const catLabel = showCategory && link.catName ? `<span class="card-cat">${link.catEmoji||''} ${link.catName}</span>` : '';
+            const btnHtml = mobile ? `<button class="copy-btn" data-url="${link.url}">📋</button>` : '';
+
+            if (mobile) {
+                const card = document.createElement('a');
+                card.className = 'link-card';
+                card.href = link.url;
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
+                card.title = link.name;
+                card.style.animationDelay = (index * 0.03) + 's';
+                card.innerHTML = `<span class="card-icon">${firstChar}</span><span class="card-name">${link.name}</span>${catLabel}${btnHtml}`;
+                return card;
+            } else {
+                const card = document.createElement('div');
+                card.className = 'link-card';
+                card.style.animationDelay = (index * 0.03) + 's';
+                card.innerHTML = `
+                    <span class="card-icon">${firstChar}</span>
+                    <span class="card-name">${link.name}</span>
+                    ${catLabel}
+                    <div class="card-actions">
+                        <span class="go-btn" data-url="${link.url}">前往 →</span>
+                        <button class="copy-btn" data-url="${link.url}">复制</button>
+                    </div>
+                `;
+                card.querySelector('.go-btn').addEventListener('click', (e) => { e.stopPropagation(); window.open(link.url, '_blank'); });
+                return card;
+            }
+        }
+
         function renderSecretLinks() {
             const grid = document.getElementById('secretLinkGrid'); grid.innerHTML = '';
             if (!secretLinks.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><p>暂无隐藏网站</p></div>'; return; }
-            secretLinks.forEach((link, i) => {
-                const card = document.createElement('a'); card.className = 'link-card';
-                card.href = link.url; card.target = '_blank'; card.rel = 'noopener noreferrer';
-                card.title = link.name; card.style.animationDelay = (i * 0.03) + 's';
-                card.innerHTML = `
-                    <span class="card-icon">${link.name.charAt(0).toUpperCase()}</span>
-                    <span class="card-name">${link.name}</span>
-                    <button class="copy-btn" title="复制链接" data-url="${link.url}">📋</button>
-                `;
-                grid.appendChild(card);
-            });
+            secretLinks.forEach((link, i) => { grid.appendChild(createCard({...link, catName:null, catEmoji:null}, i, false)); });
         }
+
+        // 复制按钮全局处理
+        document.addEventListener('click', async function(e) {
+            const btn = e.target.closest('.copy-btn');
+            if (!btn) return;
+            e.preventDefault(); e.stopPropagation();
+            const url = btn.getAttribute('data-url');
+            if (url) {
+                try { await navigator.clipboard.writeText(url); btn.classList.add('copied'); btn.textContent = '✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋'; }, 1000); }
+                catch { const textarea = document.createElement('textarea'); textarea.value = url; textarea.style.position='fixed'; textarea.style.opacity='0'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); btn.classList.add('copied'); btn.textContent='✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent='📋'; }, 1000); }
+            }
+        });
+
+        // 桌面端添加类名
+        if (!isMobile()) document.body.classList.add('desktop');
 
         document.getElementById('homeBtn').addEventListener('click', () => {
             homeClickCount++; clearTimeout(homeClickTimer); homeClickTimer = setTimeout(() => homeClickCount=0, 5000);
@@ -836,9 +835,7 @@
             });
             updateNavActive();
         }
-        function updateNavActive() {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.catId === currentCategoryId));
-        }
+        function updateNavActive() { document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.catId === currentCategoryId)); }
         function updateSearchPlaceholder() {
             const input = document.getElementById('searchInput');
             if (currentCategoryId === 'all') input.placeholder = '输入汉字或拼音搜索（支持空格）…';
@@ -852,51 +849,15 @@
             closeSidebar();
         }
 
-        function getPinyinInfo(name) {
-            if (typeof pinyinPro === 'undefined') { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; }
-            try { const full = pinyinPro.pinyin(name,{pattern:'normal',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); const first = pinyinPro.pinyin(name,{pattern:'first',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); return {full, first}; }
-            catch(e) { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; }
-        }
-
-        function matchesQuery(link, rawQuery) {
-            if (!rawQuery) return true;
-            const lowerName = link.name.toLowerCase();
-            const pinyin = getPinyinInfo(link.name);
-            const words = rawQuery.split(/\s+/).filter(w => w.length);
-            return words.every(word => {
-                if (word.length === 1 && word.match(/[a-z]/i)) {
-                    const englishFirst = lowerName.charAt(0);
-                    const pinyinFirst = pinyin.first.charAt(0);
-                    return englishFirst === word || pinyinFirst === word;
-                }
-                return lowerName.includes(word) || pinyin.full.includes(word) || pinyin.first.includes(word);
-            });
-        }
-
-        function sortLinks(links) {
-            return links.sort((a, b) => {
-                const pinyinA = getPinyinInfo(a.name), pinyinB = getPinyinInfo(b.name);
-                const firstA = pinyinA.first.charAt(0) || a.name.charAt(0).toLowerCase();
-                const firstB = pinyinB.first.charAt(0) || b.name.charAt(0).toLowerCase();
-                if (firstA !== firstB) return firstA.localeCompare(firstB);
-                return a.name.localeCompare(b.name, 'zh');
-            });
-        }
-
-        function updateAlphabetBarState() {
-            const existing = new Set();
-            document.querySelectorAll('.link-card[data-pinyin-first]').forEach(card => {
-                const ch = card.getAttribute('data-pinyin-first'); if (ch) existing.add(ch);
-            });
-            document.querySelectorAll('.alphabet-bar button').forEach(btn => {
-                const letter = btn.textContent.toLowerCase();
-                btn.classList.toggle('disabled', !existing.has(letter));
-            });
-        }
+        function getPinyinInfo(name) { if (typeof pinyinPro === 'undefined') { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; } try { const full = pinyinPro.pinyin(name,{pattern:'normal',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); const first = pinyinPro.pinyin(name,{pattern:'first',toneType:'none'}).replace(/\s+/g,'').toLowerCase(); return {full, first}; } catch(e) { const lower = name.toLowerCase().replace(/\s+/g,''); return { full: lower, first: lower.charAt(0) || '' }; } }
+        function matchesQuery(link, rawQuery) { if (!rawQuery) return true; const lowerName = link.name.toLowerCase(); const pinyin = getPinyinInfo(link.name); const words = rawQuery.split(/\s+/).filter(w => w.length); return words.every(word => { if (word.length === 1 && word.match(/[a-z]/i)) { const englishFirst = lowerName.charAt(0); const pinyinFirst = pinyin.first.charAt(0); return englishFirst === word || pinyinFirst === word; } return lowerName.includes(word) || pinyin.full.includes(word) || pinyin.first.includes(word); }); }
+        function sortLinks(links) { return links.sort((a, b) => { const pinyinA = getPinyinInfo(a.name), pinyinB = getPinyinInfo(b.name); const firstA = pinyinA.first.charAt(0) || a.name.charAt(0).toLowerCase(); const firstB = pinyinB.first.charAt(0) || b.name.charAt(0).toLowerCase(); if (firstA !== firstB) return firstA.localeCompare(firstB); return a.name.localeCompare(b.name, 'zh'); }); }
+        function updateAlphabetBarState() { const existing = new Set(); document.querySelectorAll('.link-card[data-pinyin-first]').forEach(card => { const ch = card.getAttribute('data-pinyin-first'); if (ch) existing.add(ch); }); document.querySelectorAll('.alphabet-bar button').forEach(btn => { const letter = btn.textContent.toLowerCase(); btn.classList.toggle('disabled', !existing.has(letter)); }); }
 
         function renderLinks(linksOverride) {
             const grid = document.getElementById('linkGrid'); const titleEl = document.getElementById('contentTitle'); grid.innerHTML = '';
-            let linksToShow, titleText; const showCategory = true;
+            let linksToShow, titleText;
+            const showCategory = (currentCategoryId === 'all');
             if (linksOverride) { linksToShow = linksOverride; titleText = `🔍 搜索结果 (${linksToShow.length})`; }
             else if (currentCategoryId === 'all') { linksToShow = []; categories.forEach(cat => cat.links.forEach(link => linksToShow.push({...link, catName:cat.name, catEmoji:cat.iconEmoji}))); linksToShow = sortLinks(linksToShow); titleText = `🗂️ 全部链接 (${linksToShow.length})`; }
             else { const cat = categories.find(c => c.id === currentCategoryId); if (cat) { linksToShow = cat.links.map(l => ({...l, catName:cat.name, catEmoji:cat.iconEmoji})); linksToShow = sortLinks(linksToShow); titleText = `${cat.iconEmoji} ${cat.name}`; } else { linksToShow = []; titleText = ''; } }
@@ -904,29 +865,21 @@
             if (!linksToShow.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><p>没有找到匹配的链接</p></div>'; updateAlphabetBarState(); return; }
             const fragment = document.createDocumentFragment();
             linksToShow.forEach((link, index) => {
-                const card = document.createElement('a'); card.className = 'link-card';
-                card.href = link.url; card.target = '_blank'; card.rel = 'noopener noreferrer';
-                card.title = link.name; card.style.animationDelay = (index * 0.03) + 's';
-                const firstChar = link.name.charAt(0).toUpperCase();
-                const pinyin = getPinyinInfo(link.name);
-                const pinyinFirst = pinyin.first.charAt(0) || firstChar.toLowerCase();
-                card.setAttribute('data-pinyin-first', pinyinFirst);
-                const catLabel = showCategory && link.catName ? `<span style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">${link.catEmoji||''} ${link.catName}</span>` : '';
-                card.innerHTML = `<span class="card-icon">${firstChar}</span><span class="card-name">${link.name}</span>${catLabel}<button class="copy-btn" title="复制链接" data-url="${link.url}">📋</button>`;
+                const card = createCard(link, index, showCategory);
+                if (!card.href) {
+                    const pinyin = getPinyinInfo(link.name);
+                    const pinyinFirst = pinyin.first.charAt(0) || link.name.charAt(0).toLowerCase();
+                    card.setAttribute('data-pinyin-first', pinyinFirst);
+                } else {
+                    const pinyin = getPinyinInfo(link.name);
+                    const pinyinFirst = pinyin.first.charAt(0) || link.name.charAt(0).toLowerCase();
+                    card.setAttribute('data-pinyin-first', pinyinFirst);
+                }
                 fragment.appendChild(card);
             });
             grid.appendChild(fragment);
             updateAlphabetBarState();
         }
-
-        document.addEventListener('click', async function(e) {
-            const btn = e.target.closest('.copy-btn');
-            if (!btn) return;
-            e.preventDefault(); e.stopPropagation();
-            const url = btn.getAttribute('data-url') || btn.parentElement.href;
-            try { await navigator.clipboard.writeText(url); btn.classList.add('copied'); btn.textContent = '✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋'; }, 1000); }
-            catch (err) { const textarea = document.createElement('textarea'); textarea.value = url; textarea.style.position = 'fixed'; textarea.style.opacity = '0'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); btn.classList.add('copied'); btn.textContent = '✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋'; }, 1000); }
-        });
 
         function setupSearch() {
             const searchInput = document.getElementById('searchInput'); const searchInfo = document.getElementById('searchInfo');
