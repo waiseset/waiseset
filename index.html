@@ -804,8 +804,8 @@
             e.preventDefault(); e.stopPropagation();
             const url = btn.getAttribute('data-url');
             if (url) {
-                try { await navigator.clipboard.writeText(url); btn.classList.add('copied'); btn.textContent = '✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋'; }, 1000); }
-                catch { const textarea = document.createElement('textarea'); textarea.value = url; textarea.style.position='fixed'; textarea.style.opacity='0'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); btn.classList.add('copied'); btn.textContent='✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent='📋'; }, 1000); }
+                try { await navigator.clipboard.writeText(url); btn.classList.add('copied'); btn.textContent = '✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '复制'; }, 1000); }
+                catch { const textarea = document.createElement('textarea'); textarea.value = url; textarea.style.position='fixed'; textarea.style.opacity='0'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); btn.classList.add('copied'); btn.textContent='✓'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent='复制'; }, 1000); }
             }
         });
 
