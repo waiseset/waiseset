@@ -761,7 +761,7 @@
             const mobile = isMobile();
             const firstChar = link.name.charAt(0).toUpperCase();
             const catLabel = showCategory && link.catName ? `<span class="card-cat">${link.catEmoji||''} ${link.catName}</span>` : '';
-            const btnHtml = mobile ? `<button class="copy-btn" data-url="${link.url}">📋</button>` : '';
+            const btnHtml = mobile ? `<button class="copy-btn" data-url="${link.url}">复制</button>` : '';
 
             if (mobile) {
                 const card = document.createElement('a');
